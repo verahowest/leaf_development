@@ -3,20 +3,24 @@ import visualization as vis
 from growth import *
 
 
+# adapted from Runions et al. 2017 approach for leaf development
+
 
 def main():
 
     leaf = initialize_default_leaf()
 
-    # growstep
+    # growstep driven by expansion of veins
+
+    # modification of morphogen distribution
+
+    # new convergence points & possible new morphogen distribution
     hard_coded_cp_addition(leaf)
-    connect_new_cp(leaf, leaf.primordium_vein)
 
+    # new vein addition
+    vein_addition(leaf, leaf.primordium_vein)
 
-
-
-    # print_points(margin)
-    # vis.print_points(leaf.margin.all_cp)
+    # expand_veins(leaf, 3)
 
     # plot leaf
     vis.plot_leaf(leaf)
