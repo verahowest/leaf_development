@@ -11,7 +11,7 @@ class Point:
         self.has_vein = has_vein
 
     def __repr__(self):
-        return repr((self.pos, self.is_cp, self.vein_assoc, self.has_morphogen, self.has_vein))
+        return repr((self.pos, self.is_cp, len(self.vein_assoc), self.has_morphogen, self.has_vein))
 
     def comparator(ptA, ptB):
         """Sort by increasing y pos, and if equal increasing x pos"""
@@ -36,8 +36,15 @@ class Point:
 class PointCollection:
     def __init__(self, points, start_point, end_point):
         self.points = points
-        self.start = start_point
-        self.end = end_point
+        self.start_point = start_point
+        self.end_point = end_point
+
+    def __repr__(self):
+        return repr((self.points, self.start_point, self.end_point))
+
+    def add_to_start(self, point_to_add):
+        self.points = self.points + [point_to_add]
+        self.start_point = point_to_add
 
     def add_to_end(self, point_to_add):
         self.points.append(point_to_add)
@@ -64,6 +71,12 @@ class PointCollection:
         """Returns a list containing the positions for [start,end] points."""
         return [self.start_point.pos, self.end_point.pos]
 
+    def insert_point(self, point_to_add):
+        """Adds a new point sorting it in ascending y."""
+        self.points.append(point_to_add)
+        self.points = sorted(self.points, key=cmp_to_key(Point.comparator))
+        self.start_point = self.points[0]
+        self.end_point = self.points[-1]
 
 class Vein(PointCollection):
     def __init__(self, points, start_point, end_point):
@@ -72,14 +85,6 @@ class Vein(PointCollection):
     def get_vector(self):
         vein_vec = np.array(self.end_point.pos) - np.array(self.start_point.pos)
         return vein_vec
-
-    def insert_point(self, point_to_add):
-        """Adds a new point to the vein, sorting it and resetting the endpoints."""
-        self.points.append(point_to_add)
-        self.points = sorted(self.points, key=cmp_to_key(Point.comparator))
-        self.start_point = self.points[0]
-        self.end_point = self.points[-1]
-
 
 class Margin(PointCollection):
     def __init__(self, points, start_point, end_point):
@@ -101,6 +106,44 @@ class Margin(PointCollection):
             x_pos.append(point.pos[0])
             y_pos.append(point.pos[1])
         return x_pos, y_pos, pos
+
+    def insert_point(self, point_to_add):
+        """Adds a new point to the margin, sorting it and resetting the endpoints."""
+        m_neg = []
+        m_pos = []
+        m_0 = []
+        if point_to_add.pos[0] < 0:
+            m_neg.append(point_to_add)
+        if point_to_add.pos[0] > 0:
+            m_pos.append(point_to_add)
+        else:
+            m_0.append(point_to_add)
+        # split points into left and right margin based on x values
+        for pt in self.points:
+            if pt.pos[0] < 0:
+                m_neg.append(pt)
+            elif pt.pos[0] > 0:
+                m_pos.append(pt)
+            else:
+                m_0.append(pt)
+
+        # sort sides individually
+        m_neg = sorted(m_neg, key=cmp_to_key(Point.comparator))
+        m_pos = sorted(m_pos, key=cmp_to_key(Point.comparator), reverse=True) #sort top to bottom
+        m_0 = sorted(m_0, key=cmp_to_key(Point.comparator))
+
+        # add list parts and set to attributes
+        self.points = [m_0[0]] + m_neg + m_0[1:] + m_pos
+        self.start_point = self.points[0]
+        self.end_point = self.points[0]
+
+    def get_cp_indicators(self):
+        """Returns a list of 1 or 0 values depending on the existence of a cp
+        in the respective margin position."""
+        cp_indicators = []
+        for pt in self.points:
+            cp_indicators.append(pt.is_cp)
+        return cp_indicators
 
 class Leaf:
     def __init__(self, base_point, primordium_vein, margin, all_veins):
