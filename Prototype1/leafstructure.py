@@ -141,9 +141,15 @@ class Margin(PointCollection):
         """Returns a list of 1 or 0 values depending on the existence of a cp
         in the respective margin position."""
         cp_indicators = []
-        for pt in self.points:
-            cp_indicators.append(pt.is_cp)
-        return cp_indicators
+        cp_index = []
+        for i in range(len(self.points)):
+            if self.points[i].is_cp:
+                cp_indicators.append(1)
+                cp_index.append(i)
+            else:
+                cp_indicators.append(0)
+
+        return cp_indicators, cp_index
 
 class Leaf:
     def __init__(self, base_point, primordium_vein, margin, all_veins):
