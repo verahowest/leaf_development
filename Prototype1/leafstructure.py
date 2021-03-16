@@ -78,6 +78,13 @@ class PointCollection:
         self.start_point = self.points[0]
         self.end_point = self.points[-1]
 
+    # TODO
+    # def grow(self, translation):
+    #     """Adds a given translation defined by [x,y] to a point position"""
+    #     for i in range(self.points):
+    #         self.points[i].pos += translation[i]
+
+
 class Vein(PointCollection):
     def __init__(self, points, start_point, end_point):
         super().__init__(points, start_point, end_point)
