@@ -17,7 +17,8 @@ def main():
         # modification of morphogen distribution
 
         # new convergence points & possible new morphogen distribution
-        hard_coded_cp_addition(leaf)
+        if i == 0:
+            hard_coded_cp_addition(leaf)
 
         # new vein addition
         vein_addition(leaf, leaf.primordium_vein)

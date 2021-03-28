@@ -1,5 +1,6 @@
 import numpy as np
 from sklearn.metrics.pairwise import euclidean_distances
+from scipy.interpolate import interp1d
 from leafstructure import Point, Vein, Margin, Leaf
 
 
@@ -42,11 +43,46 @@ def bounding_distances(list_of_pts, left_pt, right_pt):
 
 # LEAF DEVELOPMENT FUNCTIONS
 
+def interpolate_pts(pt_A, pt_B, leaf):
+    """Given two positions a new point is created between these points by linear interpolation"""
+    print(pt_A)
+    print(pt_B)
+    x = [pt_A.pos[0], pt_B.pos[0]]
+    y = [pt_A.pos[1], pt_B.pos[1]]
+    print(f"x: {x} y: {y}")
+
+    xnew = np.linspace(x[0], x[1], num=3, endpoint=True)
+    f = interp1d(x, y, kind='linear')
+    ynew = f(xnew)
+    print(f"xnew: {xnew} ynew: {ynew}")
+    new_pt = Point([xnew[1], ynew[1]], 0, leaf.primordium_vein, 0, 0)
+    leaf.margin.insert_point(new_pt)
+
+
+def initialize_growth(leaf):
+    cp_indicators, cp_index = leaf.margin.get_cp_indicators()
+    print(f"cp_indicators:  {cp_indicators}, cp_index: {cp_index}")
+    # check if points need to be interpolated
+    if len(cp_index) > 1:
+        prev_i = 0
+        for i in range(1, len(cp_index)):
+            if (cp_index[i] - cp_index[prev_i]) <= 1:
+                print(f"previ{cp_index[prev_i]} i{cp_index[i]}")
+                interpolate_pts(leaf.margin.points[cp_index[prev_i]], leaf.margin.points[cp_index[i]], leaf)
+                # recalculate cp_indicators
+                cp_indicators, cp_index = leaf.margin.get_cp_indicators()
+                print(f"cp_indicators:  {cp_indicators}, cp_index: {cp_index}")
+            prev_i = i
+    return cp_indicators, cp_index
+
+
 def hard_coded_cp_addition(leaf):
     """create new cp for vein insertion this is temporarily hard coded for poc,
     later done dynamically based on threshold during growth"""
-    leaf.margin.points[4].is_cp = 1
-    leaf.margin.points[10].is_cp = 1
+    leaf.margin.points[2].is_cp = 1
+    leaf.margin.points[3].is_cp = 1
+    leaf.margin.points[7].is_cp = 1
+    leaf.margin.points[8].is_cp = 1
     leaf.margin.check_conv_points()
 
 
@@ -103,9 +139,7 @@ def calculate_gr(prev_data, next_data, gr):
 def expand_veins(leaf, gr):
     """Expand the cp on margin in the direction of their veins
     by a growth rate (gr)"""
-    veins = []
-    cp_indicators, cp_index = leaf.margin.get_cp_indicators()
-    print(f"cp_indicators:  {cp_indicators}, cp_index: {cp_index}")
+    cp_indicators, cp_index = initialize_growth(leaf)
     prev_cp_i = 0
     gr_total = np.zeros(len(cp_indicators))
     # maybe change to 0 later or just to a minimal value instead?
@@ -151,26 +185,3 @@ def expand_veins(leaf, gr):
             prev_vein_dir = next_vein_dir
 
     # leaf.margin.grow(gr_total)
-
-# def expand_veins(leaf, gr):
-#     """Expand the cp on margin in the direction of their veins
-#     by a growth rate (gr)"""
-#     veins = []
-#     cp_indicators, cp_index = leaf.margin.get_cp_indicators()
-#     print(cp_index)
-#     prev_cp = 0
-#     for i in range(1, len(cp_indicators)):
-#         # next_cp =
-#         if cp_indicators[i] == 1:
-#             cp = leaf.margin.points[i]
-#             # only feed positions left and right of cp to the distance function
-#             # multiply these by growth rate in direction
-#             # add to existing gr values
-#             # at the end of the loop expand all in 1 go
-#
-#             # print(distance_matrix(leaf.margin, cp))
-#
-#             exp_vein = cp.vein_assoc[-1]
-#             dir_vein = normalize_vec(exp_vein.get_vector())
-#             cp.pos = cp.pos + (gr * dir_vein)
-#         # prev_cp =
