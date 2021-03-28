@@ -5,12 +5,13 @@ import matplotlib.pyplot as plt
 
 
 # adapted from Runions et al. 2017 approach for leaf development
-STEPS = 2
+STEPS = 10
 LEAF_PATH = "../img/plot_data/"
 BASE_NAME = "leaf_"
 def main():
 
     leaf = initialize_default_leaf()
+    vis.plot_leaf(leaf, 15, LEAF_PATH, BASE_NAME, 0)
     for i in range(STEPS):
         # growstep driven by expansion of veins
         expand_veins(leaf, 0.5)
@@ -24,7 +25,7 @@ def main():
         vein_addition(leaf, leaf.primordium_vein)
 
         # plot leaf
-        vis.plot_leaf(leaf, 15, LEAF_PATH, BASE_NAME, i)
+        vis.plot_leaf(leaf, 15, LEAF_PATH, BASE_NAME, i+1)
 
 
 if __name__ == "__main__":

@@ -45,16 +45,12 @@ def bounding_distances(list_of_pts, left_pt, right_pt):
 
 def interpolate_pts(pt_A, pt_B, leaf):
     """Given two positions a new point is created between these points by linear interpolation"""
-    print(pt_A)
-    print(pt_B)
     x = [pt_A.pos[0], pt_B.pos[0]]
     y = [pt_A.pos[1], pt_B.pos[1]]
-    print(f"x: {x} y: {y}")
 
     xnew = np.linspace(x[0], x[1], num=3, endpoint=True)
     f = interp1d(x, y, kind='linear')
     ynew = f(xnew)
-    print(f"xnew: {xnew} ynew: {ynew}")
     new_pt = Point([xnew[1], ynew[1]], 0, leaf.primordium_vein, 0, 0)
     leaf.margin.insert_point(new_pt)
 
@@ -67,7 +63,6 @@ def initialize_growth(leaf):
         prev_i = 0
         for i in range(1, len(cp_index)):
             if (cp_index[i] - cp_index[prev_i]) <= 1:
-                print(f"previ{cp_index[prev_i]} i{cp_index[i]}")
                 interpolate_pts(leaf.margin.points[cp_index[prev_i]], leaf.margin.points[cp_index[i]], leaf)
                 # recalculate cp_indicators
                 cp_indicators, cp_index = leaf.margin.get_cp_indicators()
@@ -80,9 +75,9 @@ def hard_coded_cp_addition(leaf):
     """create new cp for vein insertion this is temporarily hard coded for poc,
     later done dynamically based on threshold during growth"""
     leaf.margin.points[2].is_cp = 1
-    leaf.margin.points[3].is_cp = 1
+    # leaf.margin.points[3].is_cp = 1
     leaf.margin.points[7].is_cp = 1
-    leaf.margin.points[8].is_cp = 1
+    # leaf.margin.points[8].is_cp = 1
     leaf.margin.check_conv_points()
 
 
@@ -120,20 +115,13 @@ def vein_addition(leaf, vein):
             leaf.add_vein(new_vein)
 
 
-def calculate_gr(prev_data, next_data, gr):
-    # gr_pts = np.zeros(prev.size())
-    # for prev and next
-    # for i in [prev_data, next_data]:
-    # temp_dist = i[0]
-    # temp_dir = i[1]
+def calculate_gr(dist, dir, gr):
+    """multiply direction * gr * distance"""
 
-    # TODO ! multiply direction * gr * normalized distance in correct math
-    # next_growth = temp_dist * gr * temp_dir
-
-    # calculate total
-    # gr_pts = gr_pts + next_growth
-
-    return 1
+    # TODO ! Normalize distance from 0 to 1 ! if necessary for precision later
+    temp_growth = (gr * dir)/dist
+    # print(f"dist { dist} temp_growth: {temp_growth}")
+    return temp_growth
 
 
 def expand_veins(leaf, gr):
@@ -141,32 +129,22 @@ def expand_veins(leaf, gr):
     by a growth rate (gr)"""
     cp_indicators, cp_index = initialize_growth(leaf)
     prev_cp_i = 0
-    gr_total = np.zeros(len(cp_indicators))
+    gr_total = np.zeros((len(cp_indicators),2))
     # maybe change to 0 later or just to a minimal value instead?
     prev_vein_dir = -1 * normalize_vec(leaf.primordium_vein.get_vector())
+    # print(leaf.margin.print_points())
     for i in range(1, len(cp_indicators)):
-        if cp_indicators[i] == 1:
-
-            # when next cp is found define next margin part
-            if i == cp_index[-1]:  # if the last Cp is find connect basepoint as next cp
+        if cp_indicators[i] == 1 or cp_index == []:
+            if cp_index == []:
                 next_cp_i = 0
-                print(f"leaf.margin.points[{prev_cp_i + 1}:{next_cp_i}]")
-                margin_part = leaf.margin.points[(prev_cp_i + 1):]
+                margin_part = leaf.margin.points[(prev_cp_i + 1):(len(cp_indicators)-1)]
             else:
                 next_cp_i = cp_index[0]
-                print(f"leaf.margin.points[{prev_cp_i + 1}:{next_cp_i}]")
-                if (prev_cp_i + 1) == next_cp_i:
-                    margin_part = [leaf.margin.points[next_cp_i]]
-                else:
-                    print(f"leaf.margin.points[{prev_cp_i + 1}:{next_cp_i}]")
-                    margin_part = leaf.margin.points[(prev_cp_i + 1):next_cp_i]
-                # print(f"margin_part: {margin_part}")
-            # print(f"i: {i}, next_cp_i = {cp_index[0]}")
-
-            prev_cp = leaf.margin.points[prev_cp_i]
-            next_cp = leaf.margin.points[next_cp_i]
+                margin_part = leaf.margin.points[(prev_cp_i + 1):next_cp_i]
 
             # only feed positions left and right of cp to the distance function
+            prev_cp = leaf.margin.points[prev_cp_i]
+            next_cp = leaf.margin.points[next_cp_i]
             prev_dist, next_dist = bounding_distances(margin_part, prev_cp, next_cp)
 
             # get growth direction of new cp
@@ -174,14 +152,19 @@ def expand_veins(leaf, gr):
             next_vein_dir = normalize_vec(exp_vein.get_vector())
 
             # add to array of gr values
-            prev_data = [prev_dist, prev_vein_dir]
-            next_data = [next_dist, next_vein_dir]
-            gr_total[(prev_cp_i + 1):next_cp_i] = calculate_gr(prev_data, next_data, gr)
-            print(f" gr_total[{prev_cp_i + 1}:{next_cp_i}]: {gr_total}")
+            temp_prev = calculate_gr(prev_dist, prev_vein_dir, gr)
+            temp_next = calculate_gr(next_dist, next_vein_dir, gr)
+            if cp_index == []:
+                gr_total[(prev_cp_i + 1):len(cp_indicators)-1] = temp_next + temp_prev
+                leaf.margin.grow(gr_total)
+                return 0
+            else:
+                gr_total[(prev_cp_i + 1):next_cp_i] = temp_next + temp_prev
+                gr_total[next_cp_i] = np.multiply(next_vein_dir, gr)
+                cp_index = cp_index[1:]
+            # print(f" gr_total[{prev_cp_i + 1}:{next_cp_i}]: {gr_total}")
+
             # move margin for next iteration
-            cp_index = cp_index[1:]
-            # print(f"cp_index: {cp_index}")
             prev_cp_i = next_cp_i
             prev_vein_dir = next_vein_dir
-
-    # leaf.margin.grow(gr_total)
+    return 1

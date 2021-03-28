@@ -19,6 +19,7 @@ y = np.cos(-x**2/9.0)
 
 
 leaf = initialize_default_leaf()
+print(leaf.margin)
 points_x, points_y, _ = leaf.margin.get_points_pos()
 
 left_point = 3

@@ -161,6 +161,12 @@ class Margin(PointCollection):
 
         return cp_indicators, cp_index
 
+    def grow(self, gr_total):
+        """Adds the growth array to the current margin positions"""
+        for i in range(len(gr_total)):
+            self.points[i].pos += gr_total[i]
+
+
 class Leaf:
     def __init__(self, base_point, primordium_vein, margin, all_veins):
         self.base_point = base_point
