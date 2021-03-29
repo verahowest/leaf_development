@@ -32,3 +32,4 @@ def plot_leaf(leaf, dim, path, name, step):  # base_point, all_veins, margin, al
     plt.clf()
 
     # plt.show()
+

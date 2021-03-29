@@ -78,6 +78,13 @@ class PointCollection:
         self.start_point = self.points[0]
         self.end_point = self.points[-1]
 
+    # TODO
+    # def grow(self, translation):
+    #     """Adds a given translation defined by [x,y] to a point position"""
+    #     for i in range(self.points):
+    #         self.points[i].pos += translation[i]
+
+
 class Vein(PointCollection):
     def __init__(self, points, start_point, end_point):
         super().__init__(points, start_point, end_point)
@@ -116,26 +123,29 @@ class Margin(PointCollection):
             m_neg.append(point_to_add)
         if point_to_add.pos[0] > 0:
             m_pos.append(point_to_add)
-        else:
+        if point_to_add.pos[0] == 0:
             m_0.append(point_to_add)
+
         # split points into left and right margin based on x values
         for pt in self.points:
             if pt.pos[0] < 0:
                 m_neg.append(pt)
-            elif pt.pos[0] > 0:
+            if pt.pos[0] > 0:
                 m_pos.append(pt)
-            else:
+            if pt.pos[0] == 0:
                 m_0.append(pt)
 
         # sort sides individually
         m_neg = sorted(m_neg, key=cmp_to_key(Point.comparator))
         m_pos = sorted(m_pos, key=cmp_to_key(Point.comparator), reverse=True) #sort top to bottom
         m_0 = sorted(m_0, key=cmp_to_key(Point.comparator))
+        # print(f"m_neg {m_neg}, m_pos {m_pos}, m_0 {m_0}")
 
         # add list parts and set to attributes
         self.points = [m_0[0]] + m_neg + m_0[1:] + m_pos
         self.start_point = self.points[0]
         self.end_point = self.points[0]
+        return len(self.points)
 
     def get_cp_indicators(self):
         """Returns a list of 1 or 0 values depending on the existence of a cp
@@ -150,6 +160,12 @@ class Margin(PointCollection):
                 cp_indicators.append(0)
 
         return cp_indicators, cp_index
+
+    def grow(self, gr_total):
+        """Adds the growth array to the current margin positions"""
+        for i in range(len(gr_total)):
+            self.points[i].pos += gr_total[i]
+
 
 class Leaf:
     def __init__(self, base_point, primordium_vein, margin, all_veins):
