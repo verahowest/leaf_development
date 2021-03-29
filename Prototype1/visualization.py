@@ -27,7 +27,7 @@ def plot_leaf(leaf, dim, path, name, step):  # base_point, all_veins, margin, al
     x_cp, y_cp, pos_cp = leaf.margin.get_cp_pos()
     plt.plot(x_cp, y_cp, 'yo')
 
-    plt.axis([-dim, dim, 0, dim])
+    plt.axis([-dim, dim, -dim/4, dim])
     plt.savefig(path + name + str(step) + ".png", format="PNG")
     plt.clf()
 

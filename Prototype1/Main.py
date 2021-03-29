@@ -14,15 +14,19 @@ def main():
     vis.plot_leaf(leaf, 15, LEAF_PATH, BASE_NAME, 0)
     for i in range(STEPS):
         # growstep driven by expansion of veins
-        expand_veins(leaf, 0.5)
+        leaf = expand_veins(leaf, 0.2)
         # modification of morphogen distribution
 
         # new convergence points & possible new morphogen distribution
         if i == 0:
-            hard_coded_cp_addition(leaf)
+            leaf = hard_coded_cp_addition(leaf)
+        else:
+            leaf = introduce_new_cp(leaf, 3.5)
+            print(f"len of margin: {len(leaf.margin.points)}")
+            print(f"all cp len: {len(leaf.margin.all_cp)}")
 
         # new vein addition
-        vein_addition(leaf, leaf.primordium_vein)
+        leaf = vein_addition(leaf)
 
         # plot leaf
         vis.plot_leaf(leaf, 15, LEAF_PATH, BASE_NAME, i+1)
