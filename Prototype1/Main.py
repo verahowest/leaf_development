@@ -3,30 +3,33 @@ import visualization as vis
 from growth import *
 import matplotlib.pyplot as plt
 
+STEPS = 15 #simulation steps
+INTERPOLATION = 3 #number of points to interpolate between margin points (min 1)
+GR = 0.4
+CP_TH = 8.5
+KV = 1 #vasculatory auxin movement rate
+LEAF_PATH = "../img/plot_data/" #where to save plot data
+BASE_NAME = "leaf_" #base name of plots
 
-# adapted from Runions et al. 2017 approach for leaf development
-STEPS = 10
-LEAF_PATH = "../img/plot_data/"
-BASE_NAME = "leaf_"
 def main():
-
+    """Adapted from Runions et al. 2017 approach for leaf development"""
     leaf = initialize_default_leaf()
     vis.plot_leaf(leaf, 15, LEAF_PATH, BASE_NAME, 0)
     for i in range(STEPS):
         # growstep driven by expansion of veins
-        leaf = expand_veins(leaf, 0.2)
+        expand_veins(leaf, GR, INTERPOLATION)
         # modification of morphogen distribution
 
         # new convergence points & possible new morphogen distribution
-        if i == 0:
-            leaf = hard_coded_cp_addition(leaf)
+        if i < 0:
+            hard_coded_cp_addition(leaf)
         else:
-            leaf = introduce_new_cp(leaf, 3.5)
+            introduce_new_cp(leaf, CP_TH, INTERPOLATION)
             print(f"len of margin: {len(leaf.margin.points)}")
             print(f"all cp len: {len(leaf.margin.all_cp)}")
 
         # new vein addition
-        leaf = vein_addition(leaf)
+        vein_addition(leaf, KV)
 
         # plot leaf
         vis.plot_leaf(leaf, 15, LEAF_PATH, BASE_NAME, i+1)

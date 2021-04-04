@@ -42,24 +42,28 @@ def bounding_distances(list_of_pts, left_pt, right_pt):
     return euc_res_left, euc_res_right
 
 
-def interpolate_pts(pt_A, pt_B, leaf, mustAdd):
+def interpolate_pts(pt_A, pt_B, leaf, mustAdd, interpolation):
     """Given two positions a new point is created between these points by linear interpolation"""
     x = [pt_A.pos[0], pt_B.pos[0]]
     y = [pt_A.pos[1], pt_B.pos[1]]
+    num_interp = 2 + interpolation
 
-    xnew = np.linspace(x[0], x[1], num=3, endpoint=True)
+    xnew = np.linspace(x[0], x[1], num=num_interp, endpoint=True)
     f = interp1d(x, y, kind='linear')
     ynew = f(xnew)
 
+    # for each interpolation point
     if mustAdd:
-        new_pt = Point([xnew[1], ynew[1]], 0, leaf.primordium_vein, 0, 0)
-        leaf.margin.insert_point(new_pt)
+        for i in range(1, interpolation + 1):
+            new_pt = Point([xnew[i], ynew[i]], 0, leaf.primordium_vein, 0, 0)
+            leaf.margin.insert_point(new_pt)
+        return 0
     return [xnew[1], ynew[1]]
 
 
 # LEAF DEVELOPMENT FUNCTIONS
 
-def init_cp_indicators(leaf):
+def init_cp_indicators(leaf, interpolation):
     cp_indicators, cp_index = leaf.margin.get_cp_indicators()
     print(f"cp_indicators:  {cp_indicators}, cp_index: {cp_index}")
     # check if points need to be interpolated
@@ -67,13 +71,13 @@ def init_cp_indicators(leaf):
         prev_i = 0
         # interpolate for the 0 index (separate due to special case index slicing)
         if cp_index[0] == 1:
-            interpolate_pts(leaf.margin.points[0], leaf.margin.points[1], leaf, True)
+            interpolate_pts(leaf.margin.points[0], leaf.margin.points[1], leaf, True, interpolation)
             cp_indicators, cp_index = leaf.margin.get_cp_indicators()
             print(f"cp_indicators:  {cp_indicators}, cp_index: {cp_index}")
         # interpolate if there are no points between cp
         for i in range(1, len(cp_index)):
             if (cp_index[i] - cp_index[prev_i]) <= 1:
-                interpolate_pts(leaf.margin.points[cp_index[prev_i]], leaf.margin.points[cp_index[i]], leaf, True)
+                interpolate_pts(leaf.margin.points[cp_index[prev_i]], leaf.margin.points[cp_index[i]], leaf, True, interpolation)
                 # recalculate cp_indicators
                 cp_indicators, cp_index = leaf.margin.get_cp_indicators()
                 print(f"cp_indicators:  {cp_indicators}, cp_index: {cp_index}")
@@ -92,59 +96,21 @@ def hard_coded_cp_addition(leaf):
     return leaf
 
 
-def create_anchor_point(cp, vein_assoc):
-    """draws a perpendicular line to the given vein.
-    Later this can be done with a theta adjustment."""
-    # find anchor point
-    vein = vein_assoc[-1]
-    anchor = vector_projection(cp.pos, vein.get_vector())
-    anchor_pt = Point(anchor.tolist(), 0, vein_assoc, 0, 0)
-
-    # add anchor point to corresponding vein
-    vein.insert_point(anchor_pt)
-
-    return anchor_pt
-
-
-def vein_addition(leaf):
-    """Connects unconnected Cp's with vein and adds new vein to leaf."""
-    for cp in leaf.margin.all_cp:
-        print(f"creating new vein for: {cp}")
-        if cp.has_vein == 1:  # skip if already connected to a vein
-            print("has vein")
-            continue
-        else:
-            print("making new vein")
-            # create new vein
-            anchor_pt = create_anchor_point(cp, cp.vein_assoc)
-            new_vein = Vein([anchor_pt, cp], anchor_pt, cp)
-
-            # add vein to vein assoc
-            anchor_pt.connect_to_new_vein(new_vein)
-            anchor_pt.has_vein = 1
-            cp.connect_to_new_vein(new_vein)
-            cp.has_vein = 1
-
-            # add vein to leaf
-            leaf.add_vein(new_vein)
-    return leaf
-
-
 def calculate_gr(dist, dir, gr):
     """multiply direction * gr * distance"""
 
     # TODO ! Normalize distance from 0 to 1 ? if necessary for precision later
-    temp_growth = (gr * dir)/dist
+    temp_growth = (gr * dir) / dist
     # print(f"dist { dist} temp_growth: {temp_growth}")
     return temp_growth
 
 
-def expand_veins(leaf, gr):
+def expand_veins(leaf, gr, interpolation):
     """Expand the cp on margin in the direction of their veins
     by a growth rate (gr)"""
-    cp_indicators, cp_index = init_cp_indicators(leaf)
+    cp_indicators, cp_index = init_cp_indicators(leaf, interpolation)
     prev_cp_i = 0
-    gr_total = np.zeros((len(cp_indicators),2))
+    gr_total = np.zeros((len(cp_indicators), 2))
     # maybe change to 0 later or just to a minimal value instead?
     prev_vein_dir = -1 * normalize_vec(leaf.primordium_vein.get_vector())
     for i in range(1, len(cp_indicators)):
@@ -152,10 +118,10 @@ def expand_veins(leaf, gr):
             # TODO ! Bug: Last point doesn't grow with the rest
             if cp_index == []:
                 next_cp_i = 0
-                if (prev_cp_i + 1) == (len(cp_indicators)-1):
+                if (prev_cp_i + 1) == (len(cp_indicators) - 1):
                     margin_part = [leaf.margin.points[(prev_cp_i + 1)]]
                 else:
-                    margin_part = leaf.margin.points[(prev_cp_i + 1):(len(cp_indicators)-1)]
+                    margin_part = leaf.margin.points[(prev_cp_i + 1):(len(cp_indicators) - 1)]
             else:
                 next_cp_i = cp_index[0]
                 margin_part = leaf.margin.points[(prev_cp_i + 1):next_cp_i]
@@ -173,7 +139,7 @@ def expand_veins(leaf, gr):
             temp_prev = calculate_gr(prev_dist, prev_vein_dir, gr)
             temp_next = calculate_gr(next_dist, next_vein_dir, gr)
             if cp_index == []:
-                gr_total[(prev_cp_i + 1):len(cp_indicators)-1] = temp_next + temp_prev
+                gr_total[(prev_cp_i + 1):len(cp_indicators) - 1] = temp_next + temp_prev
                 leaf.margin.grow(gr_total)
                 return leaf
             else:
@@ -184,7 +150,7 @@ def expand_veins(leaf, gr):
             # move margin for next iteration
             prev_cp_i = next_cp_i
             prev_vein_dir = next_vein_dir
-    return 1
+    # return 1
 
 
 def calculate_margin_distance(margin_part):
@@ -205,13 +171,14 @@ def calculate_margin_distance(margin_part):
 def insert_cp(vein_assoc, margin_part, dist_array, dist_sum):
     """Inserts a new cp in the middle of two cps."""
 
-    middle = dist_sum/2
+    middle = dist_sum / 2
     temp_dist = 0
     pos = np.zeros(2)
     for i in range(1, len(dist_array)):
         temp_dist += dist_array[i]
         if temp_dist >= middle:
-            pos = interpolate_pts(margin_part[i-1], margin_part[i], None, False)
+            pos = interpolate_pts(margin_part[i - 1], margin_part[i], None, False, 1)
+            print(f"interpolated position: {pos}")
             break
 
     new_cp = Point(pos, 1, vein_assoc, 0, 0)
@@ -219,26 +186,27 @@ def insert_cp(vein_assoc, margin_part, dist_array, dist_sum):
     return new_cp
 
 
-def introduce_new_cp(leaf, cp_th):
+def introduce_new_cp(leaf, cp_th, interpolation):
     """Introduces new cp where the boundary distance exceeds a certain distance threshold"""
-    cp_indicators, cp_index = init_cp_indicators(leaf)
+    cp_indicators, cp_index = init_cp_indicators(leaf, interpolation)
     prev_cp_i = 0
     new_cps = []
     for i in range(1, len(cp_indicators)):
         # define next margin part
         if cp_indicators[i] == 1 or cp_index == []:
             if cp_index == []:
-                margin_part = leaf.margin.points[prev_cp_i:(len(cp_indicators)-1)]
+                margin_part = leaf.margin.points[prev_cp_i:(len(cp_indicators) - 1)]
                 margin_part = margin_part + [leaf.margin.end_point]
             else:
                 next_cp_i = cp_index[0]
-                margin_part = leaf.margin.points[prev_cp_i:(next_cp_i+1)]
+                margin_part = leaf.margin.points[prev_cp_i:(next_cp_i + 1)]
             print(f"cp_index = {cp_index}")
 
             # insert new cp if it exceeds the margin
             dist_array, dist_sum = calculate_margin_distance(margin_part)
             if cp_th < dist_sum:
-                new_cps.append(insert_cp([leaf.primordium_vein], margin_part, dist_array, dist_sum))
+                new_cp = insert_cp([leaf.primordium_vein], margin_part, dist_array, dist_sum)
+                new_cps.append(new_cp)
             print(f"number of cp's to add: {len(new_cps)}")
 
             if cp_index == []:
@@ -254,3 +222,67 @@ def introduce_new_cp(leaf, cp_th):
 
     return 1
 
+
+def find_optimal_angle(segment, kv):
+    """Finds the optimal vein angle by applying cos-1(kv/km)"""
+
+    theta = np.arccos(kv/1)
+
+    return theta
+
+
+def define_segment(all_cp, cp_i):
+    """This function returns all the veins surrounding the convergence point."""
+
+    # get veins enclosing the segment of the new cp
+    base = all_cp[cp_i].vein_assoc[-1]
+    left = all_cp[cp_i - 1].vein_assoc[-1]
+    right = all_cp[cp_i + 1].vein_assoc[-1]
+
+    segment = [left, base, right]
+
+    return segment
+
+
+def create_anchor_point(cp, vein_assoc):
+    """draws a perpendicular line to the given vein.
+    Later this can be done with a theta adjustment."""
+    # find anchor point
+    vein = vein_assoc[-1]
+    anchor = vector_projection(cp.pos, vein.get_vector())
+    anchor_pt = Point(anchor.tolist(), 0, vein_assoc, 0, 0)
+
+    # add anchor point to corresponding vein
+    vein.insert_point(anchor_pt)
+
+    return anchor_pt
+
+
+def vein_addition(leaf, kv):
+    """Connects unconnected Cp's with vein and adds new vein to leaf."""
+    for cp_i in range(len(leaf.margin.all_cp)):
+        cp = leaf.margin.all_cp[cp_i]
+        print(f"creating new vein for: {cp}")
+        if cp.has_vein == 1:  # skip if already connected to a vein
+            print("has vein")
+            continue
+        else:
+            print("making new vein")
+            # create new vein
+
+            # TODO! replace create_anchor_point by find_optimal_angle etc
+            # segment = define_segment(leaf.margin.all_cp, cp_i)
+            # theta_anchor_pt = find_optimal_angle(segment, kv)
+
+            anchor_pt = create_anchor_point(cp, cp.vein_assoc)
+            new_vein = Vein([anchor_pt, cp], anchor_pt, cp)
+
+            # add vein to vein assoc
+            anchor_pt.connect_to_new_vein(new_vein)
+            anchor_pt.has_vein = 1
+            cp.connect_to_new_vein(new_vein)
+            cp.has_vein = 1
+
+            # add vein to leaf
+            leaf.add_vein(new_vein)
+    return leaf
