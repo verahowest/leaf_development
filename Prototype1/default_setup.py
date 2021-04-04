@@ -1,16 +1,21 @@
 from leafstructure import Point, Vein, Margin, Leaf
 
-
-
 def initialize_default_leaf():
     # initialize single leaf instance
     base_point = Point([0, 0], 0, [], 0, 1)
+<<<<<<< HEAD
+=======
+    final_point = Point([0, 5], 1, [], 0, 1)
+>>>>>>> origin/angled_vein_addition
 
     # create primordium vein
-    primordium_vein = Vein([base_point], base_point, base_point)
+    primordium_vein = Vein([base_point, final_point], base_point, final_point)
+    final_point.vein_assoc = [primordium_vein]
+    primordium_vein.insert_point(final_point)
 
     base_point.vein_assoc = [primordium_vein]
 
+<<<<<<< HEAD
     has_morphogen = 0
     for i in range(6):
         if i == 0:  # skip base_point
@@ -24,11 +29,41 @@ def initialize_default_leaf():
             new_point = Point([0, i], is_cp, [primordium_vein], has_morphogen, 0)
         primordium_vein.add_to_end(new_point)
         primordium_vein.start_point = base_point
+=======
+    # create margin
+    margin = Margin([base_point, final_point], base_point, base_point)
+    width_points = [0, 1.5, 2, 1.75, 1, 0]
+    for i in [-1, 1]:
+        for j in range(1, 5):
+            x = i * width_points[j]
+            is_cp = 0
+            has_morphogen = 0
+            new_point = Point([x, j], is_cp, [primordium_vein], has_morphogen, 0)
+            margin.insert_point(new_point)
+    margin.check_conv_points()
+
+    default_leaf = Leaf(base_point, primordium_vein, margin, [primordium_vein])
+    return default_leaf
+
+def initialize_default_leaf2():
+    # initialize single leaf instance
+    base_point = Point([0, 0], 0, [], 0, 1)
+    final_point = Point([0, 5], 1, [], 0, 1)
+
+    # create primordium vein
+    primordium_vein = Vein([base_point, final_point], base_point, final_point)
+    final_point.vein_assoc = [primordium_vein]
+    primordium_vein.insert_point(final_point)
+
+    base_point.vein_assoc = [primordium_vein]
+>>>>>>> origin/angled_vein_addition
 
     # create margin
-    margin = Margin([], base_point, base_point)
-    width_points = [0, 1.5, 2, 1.5, 1, 0]
+    margin = Margin([base_point, final_point], base_point, base_point)
+    width_points = [0, 1.5, 2, 1.75, 1, 0]
+    new_length = 0
     for i in [-1, 1]:
+<<<<<<< HEAD
         for j in range(6):
             if j == 0:
                 new_point = base_point
@@ -43,5 +78,18 @@ def initialize_default_leaf():
     margin.points[6:11] = reversed(margin.points[6:11])  # Reverse, So margin is one continuous line
 
     # --------------------------------------------------------
+=======
+        print(new_length)
+        for j in range(1, 5):
+            x = i * width_points[j]
+            is_cp = 0
+            has_morphogen = 0
+            print(f"adding: [{x}, {j}]")
+            new_point = Point([x, j], is_cp, [primordium_vein], has_morphogen, 0)
+            new_length = margin.insert_point(new_point)
+            print(new_length,margin)
+    margin.check_conv_points()
+
+>>>>>>> origin/angled_vein_addition
     default_leaf = Leaf(base_point, primordium_vein, margin, [primordium_vein])
     return default_leaf
