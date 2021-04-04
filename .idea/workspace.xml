@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3ed38e10-9546-4849-9c9c-fd740011f06c" name="Default Changelist" comment="added interpolation of points">
+    <list default="true" id="3ed38e10-9546-4849-9c9c-fd740011f06c" name="Default Changelist" comment="distance and directional based growth completed!">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Prototype1/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/Main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Prototype1/growth.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/growth.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Prototype1/leafstructure.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/leafstructure.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Prototype1/testing_functionality.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/testing_functionality.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf_0.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf_0.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf_1.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf_2.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf_2.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf_3.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf_3.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +36,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PythonContentEntriesConfigurable" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunManager" selected="Python.Main">
     <configuration name="Main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -140,7 +132,14 @@
       <option name="project" value="LOCAL" />
       <updated>1616942995210</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="distance and directional based growth completed!">
+      <created>1616951377836</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1616951377836</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -160,6 +159,7 @@
     <MESSAGE value="get index cp" />
     <MESSAGE value="wip on margin growth" />
     <MESSAGE value="added interpolation of points" />
-    <option name="LAST_COMMIT_MESSAGE" value="added interpolation of points" />
+    <MESSAGE value="distance and directional based growth completed!" />
+    <option name="LAST_COMMIT_MESSAGE" value="distance and directional based growth completed!" />
   </component>
 </project>
