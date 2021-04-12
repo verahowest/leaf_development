@@ -11,6 +11,17 @@ def normalize_vec(vec):
     norm_vec = vec / np.sqrt((vec ** 2).sum())
     return norm_vec
 
+def normalize_to_range(vec, old_range, fit_range):
+    """Normalizes a vector to a given range. as adapted from sklearn:
+    X_std = (X - X.min(axis=0)) / (X.max(axis=0) - X.min(axis=0))
+    X_scaled = X_std * (max - min) + min"""
+    print(f"before: {vec}")
+
+    vec_std = (vec - old_range[0]) / (old_range[1] - old_range[0])
+    vec_scaled = vec_std * (fit_range[1] - fit_range[0]) + fit_range[0]
+
+    print(f"after in range {fit_range}: {vec_scaled}")
+    return vec_scaled
 
 def vector_projection(a, b):
     """Calculates the vector projection of a onto b."""
@@ -96,16 +107,20 @@ def hard_coded_cp_addition(leaf):
     return leaf
 
 
-def calculate_gr(dist, dir, gr):
-    """multiply direction * gr * distance"""
+def calculate_gr(dist, dir, gr, cp_th):
+    """multiply direction * gr * distance and
+    normalize this to half the max distance."""
 
-    # TODO ! Normalize distance from 0 to 1 ? if necessary for precision later
-    temp_growth = (gr * dir) / dist
+    # TODO ! improve fit?
+    old_range = [-cp_th, cp_th]
+    fit_range = [-cp_th/2, cp_th/2]
+
+    temp_growth = (gr * normalize_to_range(dir, old_range, fit_range)) / dist
     # print(f"dist { dist} temp_growth: {temp_growth}")
     return temp_growth
 
 
-def expand_veins(leaf, gr, interpolation):
+def expand_veins(leaf, gr, interpolation, cp_th):
     """Expand the cp on margin in the direction of their veins
     by a growth rate (gr)"""
     cp_indicators, cp_index = init_cp_indicators(leaf, interpolation)
@@ -136,8 +151,8 @@ def expand_veins(leaf, gr, interpolation):
             next_vein_dir = normalize_vec(exp_vein.get_vector())
 
             # add to array of gr values
-            temp_prev = calculate_gr(prev_dist, prev_vein_dir, gr)
-            temp_next = calculate_gr(next_dist, next_vein_dir, gr)
+            temp_prev = calculate_gr(prev_dist, prev_vein_dir, gr, cp_th)
+            temp_next = calculate_gr(next_dist, next_vein_dir, gr, cp_th)
             if cp_index == []:
                 gr_total[(prev_cp_i + 1):len(cp_indicators) - 1] = temp_next + temp_prev
                 leaf.margin.grow(gr_total)

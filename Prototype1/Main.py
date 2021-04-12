@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 STEPS = 15 #simulation steps
 INTERPOLATION = 3 #number of points to interpolate between margin points (min 1)
-GR = 0.4
+GR = 0.2
 CP_TH = 8.5
 KV = 1 #vasculatory auxin movement rate
 LEAF_PATH = "../img/plot_data/" #where to save plot data
@@ -17,7 +17,7 @@ def main():
     vis.plot_leaf(leaf, 15, LEAF_PATH, BASE_NAME, 0)
     for i in range(STEPS):
         # growstep driven by expansion of veins
-        expand_veins(leaf, GR, INTERPOLATION)
+        expand_veins(leaf, GR, INTERPOLATION, CP_TH)
         # modification of morphogen distribution
 
         # new convergence points & possible new morphogen distribution
