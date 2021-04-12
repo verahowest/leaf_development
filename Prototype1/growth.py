@@ -15,12 +15,8 @@ def normalize_to_range(vec, old_range, fit_range):
     """Normalizes a vector to a given range. as adapted from sklearn:
     X_std = (X - X.min(axis=0)) / (X.max(axis=0) - X.min(axis=0))
     X_scaled = X_std * (max - min) + min"""
-    print(f"before: {vec}")
-
     vec_std = (vec - old_range[0]) / (old_range[1] - old_range[0])
     vec_scaled = vec_std * (fit_range[1] - fit_range[0]) + fit_range[0]
-
-    print(f"after in range {fit_range}: {vec_scaled}")
     return vec_scaled
 
 def vector_projection(a, b):
@@ -165,7 +161,7 @@ def expand_veins(leaf, gr, interpolation, cp_th):
             # move margin for next iteration
             prev_cp_i = next_cp_i
             prev_vein_dir = next_vein_dir
-    # return 1
+    return 1
 
 
 def calculate_margin_distance(margin_part):
@@ -275,6 +271,11 @@ def create_anchor_point(cp, vein_assoc):
 
 def vein_addition(leaf, kv):
     """Connects unconnected Cp's with vein and adds new vein to leaf."""
+    segments = leaf.define_segments()
+    # theta_anchor_pt = find_optimal_angle(segment, kv)
+
+    # print(f"segments: {segments}")
+
     for cp_i in range(len(leaf.margin.all_cp)):
         cp = leaf.margin.all_cp[cp_i]
         print(f"creating new vein for: {cp}")
@@ -286,8 +287,6 @@ def vein_addition(leaf, kv):
             # create new vein
 
             # TODO! replace create_anchor_point by find_optimal_angle etc
-            # segment = define_segment(leaf.margin.all_cp, cp_i)
-            # theta_anchor_pt = find_optimal_angle(segment, kv)
 
             anchor_pt = create_anchor_point(cp, cp.vein_assoc)
             new_vein = Vein([anchor_pt, cp], anchor_pt, cp)

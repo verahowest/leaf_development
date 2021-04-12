@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 
 STEPS = 15 #simulation steps
 INTERPOLATION = 3 #number of points to interpolate between margin points (min 1)
-GR = 0.2
-CP_TH = 8.5
+GR = 0.3
+CP_TH = 6.5
 KV = 1 #vasculatory auxin movement rate
 LEAF_PATH = "../img/plot_data/" #where to save plot data
 BASE_NAME = "leaf_" #base name of plots
@@ -32,7 +32,7 @@ def main():
         vein_addition(leaf, KV)
 
         # plot leaf
-        vis.plot_leaf(leaf, 15, LEAF_PATH, BASE_NAME, i+1)
+        vis.plot_leaf_segments(leaf, 15, LEAF_PATH, BASE_NAME, i+1)
 
 
 if __name__ == "__main__":

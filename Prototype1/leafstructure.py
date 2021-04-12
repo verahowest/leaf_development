@@ -177,6 +177,42 @@ class Leaf:
     def add_vein(self, new_vein):
         self.all_veins.append(new_vein)
 
+    def define_segments(self):
+        """Defines segments as a collection of margin segments
+        with their bounding veins."""
+        segments = []
+        cp_indicators, cp_index = self.margin.get_cp_indicators()
+        prev_i = 0
+        for i in range(0, len(cp_index)+1):
+            if i >= len(cp_index):
+                end_segment = self.margin.points[prev_i:]
+                end_segment.append(self.margin.points[0])
+                segments.append(end_segment)
+            else:
+                segments.append(self.margin.points[prev_i:cp_index[i]+1])
+                prev_i = cp_index[i]
+        if len(segments) == (len(cp_index) + 1):
+            return segments
+        else:
+            return 1
+
+    def define_segments_pos(self):
+        """Returns x and y pos of segments as a collection of margin segments
+        with their bounding veins."""
+        segments_x = []
+        segments_y = []
+        segments = self.define_segments()
+        for segment in segments:
+            pts_x = []
+            pts_y = []
+            for pt in segment:
+                pts_x.append(pt.pos[0])
+                pts_y.append(pt.pos[1])
+            segments_x.append(pts_x)
+            segments_y.append(pts_y)
+
+        return segments_x, segments_y
+
 
 
 
