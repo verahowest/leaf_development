@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3ed38e10-9546-4849-9c9c-fd740011f06c" name="Default Changelist" comment="added adaptable interpolation, blockout for vein segments started">
-      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_10.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_11.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_12.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_13.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_14.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_15.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_3.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_4.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_5.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_6.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_7.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_8.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_9.png" afterDir="false" />
+    <list default="true" id="3ed38e10-9546-4849-9c9c-fd740011f06c" name="Default Changelist" comment="added segment colours for debugging">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Prototype1/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/Main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Prototype1/growth.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/growth.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Prototype1/leafstructure.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/leafstructure.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Prototype1/visualization.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/visualization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_10.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_10.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_11.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_11.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_12.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_12.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_13.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_13.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_14.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_14.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_15.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_15.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_2.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_3.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_3.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_4.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_4.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_5.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_5.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_6.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_6.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_7.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_7.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_8.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_8.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_9.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_9.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -178,7 +178,14 @@
       <option name="project" value="LOCAL" />
       <updated>1618216920960</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="added segment colours for debugging">
+      <created>1618222416515</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1618222416515</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -202,6 +209,7 @@
     <MESSAGE value="distance and directional based growth completed!" />
     <MESSAGE value="added adaptable interpolation, blockout for vein segments started" />
     <MESSAGE value="added normalized range fit for cp_growth, so cp grows quickest" />
-    <option name="LAST_COMMIT_MESSAGE" value="added normalized range fit for cp_growth, so cp grows quickest" />
+    <MESSAGE value="added segment colours for debugging" />
+    <option name="LAST_COMMIT_MESSAGE" value="added segment colours for debugging" />
   </component>
 </project>

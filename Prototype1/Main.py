@@ -17,7 +17,7 @@ def main():
     vis.plot_leaf(leaf, 15, LEAF_PATH, BASE_NAME, 0)
     for i in range(STEPS):
         # growstep driven by expansion of veins
-        expand_veins(leaf, GR, INTERPOLATION, CP_TH)
+        expand_vein_segments(leaf, GR, INTERPOLATION, CP_TH)
         # modification of morphogen distribution
 
         # new convergence points & possible new morphogen distribution

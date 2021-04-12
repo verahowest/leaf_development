@@ -49,9 +49,9 @@ def plot_leaf_segments(leaf, dim, path, name, step):  # base_point, all_veins, m
 
     # plot margin segments
     segments_x, segments_y = leaf.define_segments_pos()
-    print(f"total len: {len(leaf.margin.points)}, nr of seg: {len(segments_x)}")
+    # print(f"total len: {len(leaf.margin.points)}, nr of seg: {len(segments_x)}")
     for i in range(0, len(segments_x)):
-        print(f"part len: {len(segments_x[i])}")
+        # print(f"part len: {len(segments_x[i])}")
         plt.plot(segments_x[i], segments_y[i], color=np.random.rand(3,))
 
     # plot veins

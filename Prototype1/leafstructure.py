@@ -181,6 +181,7 @@ class Leaf:
         """Defines segments as a collection of margin segments
         with their bounding veins."""
         segments = []
+        slices = []
         cp_indicators, cp_index = self.margin.get_cp_indicators()
         prev_i = 0
         for i in range(0, len(cp_index)+1):
@@ -188,11 +189,14 @@ class Leaf:
                 end_segment = self.margin.points[prev_i:]
                 end_segment.append(self.margin.points[0])
                 segments.append(end_segment)
+                slices.append([prev_i, 0])
             else:
                 segments.append(self.margin.points[prev_i:cp_index[i]+1])
+                slices.append([prev_i, cp_index[i]+1])
                 prev_i = cp_index[i]
+
         if len(segments) == (len(cp_index) + 1):
-            return segments
+            return segments, slices
         else:
             return 1
 
@@ -201,7 +205,7 @@ class Leaf:
         with their bounding veins."""
         segments_x = []
         segments_y = []
-        segments = self.define_segments()
+        segments, _ = self.define_segments()
         for segment in segments:
             pts_x = []
             pts_y = []

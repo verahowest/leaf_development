@@ -40,7 +40,7 @@ def bounding_distances(list_of_pts, left_pt, right_pt):
     for point in list_of_pts:
         pos.append(point.pos)
     # calculate distances to left
-    # print(f"pos: {pos}, left_pt.pos {[left_pt.pos]}")
+    print(f"pos: {pos}, left_pt.pos {[left_pt.pos]}")
     euc_res_left = euclidean_distances(pos, [left_pt.pos])
     # calculate distances to right
     euc_res_right = euclidean_distances(pos, [right_pt.pos])
@@ -76,11 +76,16 @@ def init_cp_indicators(leaf, interpolation):
     # check if points need to be interpolated
     if len(cp_index) > 1:
         prev_i = 0
-        # interpolate for the 0 index (separate due to special case index slicing)
+        # interpolate for the first and last index (separate due to special case index slicing)
         if cp_index[0] == 1:
             interpolate_pts(leaf.margin.points[0], leaf.margin.points[1], leaf, True, interpolation)
             cp_indicators, cp_index = leaf.margin.get_cp_indicators()
             print(f"cp_indicators:  {cp_indicators}, cp_index: {cp_index}")
+        if cp_index[-1] == (len(leaf.margin.points) - 1):
+            interpolate_pts(leaf.margin.points[cp_index[-1]], leaf.margin.points[0], leaf, True, interpolation)
+            cp_indicators, cp_index = leaf.margin.get_cp_indicators()
+            print(f"cp_indicators:  {cp_indicators}, cp_index: {cp_index}")
+
         # interpolate if there are no points between cp
         for i in range(1, len(cp_index)):
             if (cp_index[i] - cp_index[prev_i]) <= 1:
@@ -107,13 +112,64 @@ def calculate_gr(dist, dir, gr, cp_th):
     """multiply direction * gr * distance and
     normalize this to half the max distance."""
 
-    # TODO ! improve fit?
+    # TODO ! improve fit, division by 0 not possible
     old_range = [-cp_th, cp_th]
     fit_range = [-cp_th/2, cp_th/2]
 
     temp_growth = (gr * normalize_to_range(dir, old_range, fit_range)) / dist
     # print(f"dist { dist} temp_growth: {temp_growth}")
     return temp_growth
+
+def expand_vein_segments(leaf, gr, interpolation, cp_th):
+    """Expand the cp on margin in the direction of their veins
+    by a growth rate (gr)"""
+
+    # initialize growth and interpolate margin where necessary
+    print(f"before len {len(leaf.margin.points)}")
+    cp_indicators, cp_index = init_cp_indicators(leaf, interpolation)
+    print(f"after len {len(leaf.margin.points)}")
+
+    segments, slices = leaf.define_segments()
+    gr_total = np.zeros((len(leaf.margin.points), 2))
+    prev_vein_dir = -1 * normalize_vec(leaf.primordium_vein.get_vector())
+
+    # calculate growth rate for each segment
+    for s in range(0, len(segments)):
+
+        # only feed positions left and right of cp to the distance function
+        print(f"slices: {slices[s]}/{len(leaf.margin.points)}")
+        prev_cp = segments[s][0]
+        next_cp = segments[s][-1]
+        print(f"prev_cp: {prev_cp}")
+        print(f"next_cp: {next_cp}")
+
+        prev_dist, next_dist = bounding_distances(segments[s][1:-1], prev_cp, next_cp)
+
+        # get new growth dir
+        if slices[s][1] != 0:
+            next_vein = next_cp.vein_assoc[-1]
+            next_vein_dir = normalize_vec(next_vein.get_vector())
+        else:
+            next_vein_dir = -1 * normalize_vec(leaf.primordium_vein.get_vector())
+
+        # add to array of gr values
+        temp_prev = calculate_gr(prev_dist, prev_vein_dir, gr, cp_th)
+        temp_next = calculate_gr(next_dist, next_vein_dir, gr, cp_th)
+        if slices[s][1] != 0:
+            # add cp growth rates
+            gr_total[(slices[s][1])-1] = np.multiply(next_vein_dir, gr)
+            # add non cp growth rates
+            print(f"temp_next = {temp_next}")
+            print(f"prev_next = {temp_next}")
+            print(f"gr_total = {gr_total}")
+            gr_total[(slices[s][0]+1):(slices[s][1]-1)] = temp_next + temp_prev
+        else:
+            gr_total[(slices[s][0]+1):] = temp_next + temp_prev
+            leaf.margin.grow(gr_total)
+            return leaf
+        prev_vein_dir = next_vein_dir
+    return 1
+
 
 
 def expand_veins(leaf, gr, interpolation, cp_th):
