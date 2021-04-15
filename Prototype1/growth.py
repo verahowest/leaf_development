@@ -120,23 +120,24 @@ def calculate_gr(dist, dir, gr, cp_th):
     # print(f"dist { dist} temp_growth: {temp_growth}")
     return temp_growth
 
+
 def expand_veins(leaf, gr, interpolation, cp_th):
     """Expand the cp on margin in the direction of their veins by a growth rate (gr)"""
     # initialize growth and interpolate margin where necessary
     init_cp_indicators(leaf, interpolation)
-    segments, slices = leaf.define_segments()
+    segments = leaf.define_segments()
     gr_total = np.zeros((len(leaf.margin.points), 2))
     prev_vein_dir = -1 * normalize_vec(leaf.primordium_vein.get_vector())
 
     # calculate growth rate for each segment
-    for s in range(0, len(segments)):
+    for s in segments:
         # only feed positions left and right of cp to the distance function
-        prev_cp = segments[s][0]
-        next_cp = segments[s][-1]
-        prev_dist, next_dist = bounding_distances(segments[s][1:-1], prev_cp, next_cp)
+        prev_cp = s.pts_segment[0]
+        next_cp = s.pts_segment[-1]
+        prev_dist, next_dist = bounding_distances(s.pts_segment[1:-1], prev_cp, next_cp)
 
         # get new growth dir
-        if slices[s][1] != 0:
+        if s.margin_slices[1] != 0:
             next_vein = next_cp.vein_assoc[-1]
             next_vein_dir = normalize_vec(next_vein.get_vector())
         else:
@@ -145,13 +146,13 @@ def expand_veins(leaf, gr, interpolation, cp_th):
         # add to array of gr values
         temp_prev = calculate_gr(prev_dist, prev_vein_dir, gr, cp_th)
         temp_next = calculate_gr(next_dist, next_vein_dir, gr, cp_th)
-        if slices[s][1] != 0:
+        if s.margin_slices[1] != 0:
             # add cp growth rates
-            gr_total[(slices[s][1])-1] = np.multiply(next_vein_dir, gr)
+            gr_total[(s.margin_slices[1])-1] = np.multiply(next_vein_dir, gr)
             # add non cp growth rates
-            gr_total[(slices[s][0]+1):(slices[s][1]-1)] = temp_next + temp_prev
+            gr_total[(s.margin_slices[0]+1):(s.margin_slices[1]-1)] = temp_next + temp_prev
         else:
-            gr_total[(slices[s][0]+1):] = temp_next + temp_prev
+            gr_total[(s.margin_slices[0]+1):] = temp_next + temp_prev
             leaf.margin.grow(gr_total)
             return leaf
         prev_vein_dir = next_vein_dir
@@ -236,19 +237,6 @@ def find_optimal_angle(segment, kv):
     return theta
 
 
-def define_segment(all_cp, cp_i):
-    """This function returns all the veins surrounding the convergence point."""
-
-    # get veins enclosing the segment of the new cp
-    base = all_cp[cp_i].vein_assoc[-1]
-    left = all_cp[cp_i - 1].vein_assoc[-1]
-    right = all_cp[cp_i + 1].vein_assoc[-1]
-
-    segment = [left, base, right]
-
-    return segment
-
-
 def create_anchor_point(cp, vein_assoc):
     """draws a perpendicular line to the given vein.
     Later this can be done with a theta adjustment."""
@@ -274,12 +262,9 @@ def vein_addition(leaf, kv):
         cp = leaf.margin.all_cp[cp_i]
         print(f"creating new vein for: {cp}")
         if cp.has_vein == 1:  # skip if already connected to a vein
-            print("has vein")
             continue
         else:
-            print("making new vein")
             # create new vein
-
             # TODO! replace create_anchor_point by find_optimal_angle etc
 
             anchor_pt = create_anchor_point(cp, cp.vein_assoc)

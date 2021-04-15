@@ -1,6 +1,7 @@
 from operator import itemgetter, attrgetter
 from functools import cmp_to_key
 import numpy as np
+import math
 
 class Point:
     def __init__(self, pos, is_cp, vein_assoc, has_morphogen, has_vein):
@@ -78,13 +79,6 @@ class PointCollection:
         self.start_point = self.points[0]
         self.end_point = self.points[-1]
 
-    # TODO
-    # def grow(self, translation):
-    #     """Adds a given translation defined by [x,y] to a point position"""
-    #     for i in range(self.points):
-    #         self.points[i].pos += translation[i]
-
-
 class Vein(PointCollection):
     def __init__(self, points, start_point, end_point):
         super().__init__(points, start_point, end_point)
@@ -92,6 +86,7 @@ class Vein(PointCollection):
     def get_vector(self):
         vein_vec = np.array(self.end_point.pos) - np.array(self.start_point.pos)
         return vein_vec
+
 
 class Margin(PointCollection):
     def __init__(self, points, start_point, end_point):
@@ -173,6 +168,7 @@ class Leaf:
         self.primordium_vein = primordium_vein
         self.margin = margin
         self.all_veins = all_veins
+        self.segments = self.define_segments()
 
     def add_vein(self, new_vein):
         self.all_veins.append(new_vein)
@@ -181,35 +177,35 @@ class Leaf:
         """Defines segments as a collection of margin segments
         with their bounding veins."""
         segments = []
-        slices = []
         cp_indicators, cp_index = self.margin.get_cp_indicators()
         prev_i = 0
         for i in range(0, len(cp_index)+1):
             if i >= len(cp_index):
-                end_segment = self.margin.points[prev_i:]
-                end_segment.append(self.margin.points[0])
+                end_segment_pts = self.margin.points[prev_i:]
+                end_segment_pts.append(self.margin.points[0])
+                end_segment = self.Segment(end_segment_pts, [prev_i, 0])
                 segments.append(end_segment)
-                slices.append([prev_i, 0])
             else:
-                segments.append(self.margin.points[prev_i:cp_index[i]+1])
-                slices.append([prev_i, cp_index[i]+1])
+                segment_pts = self.margin.points[prev_i:cp_index[i]+1]
+                segment = self.Segment(segment_pts, [prev_i, cp_index[i]+1])
+                segments.append(segment)
                 prev_i = cp_index[i]
 
         if len(segments) == (len(cp_index) + 1):
-            return segments, slices
+            return segments
         else:
             return 1
 
     def define_segments_pos(self):
         """Returns x and y pos of segments as a collection of margin segments
         with their bounding veins."""
+        self.segments = self.define_segments()
         segments_x = []
         segments_y = []
-        segments, _ = self.define_segments()
-        for segment in segments:
+        for segment in self.segments:
             pts_x = []
             pts_y = []
-            for pt in segment:
+            for pt in segment.pts_segment:
                 pts_x.append(pt.pos[0])
                 pts_y.append(pt.pos[1])
             segments_x.append(pts_x)
@@ -217,7 +213,91 @@ class Leaf:
 
         return segments_x, segments_y
 
+    class Segment:
+        def __init__(self, pts_segment, margin_slices):
+            self.pts_segment = pts_segment
+            self.margin_slices = margin_slices
+            self.vein_segment = self.find_surrounding_veins()
 
+        # helper function
+        def find_intersection(self, left_vein, right_vein):
+            """Define the segment points of two intersecting veins,
+            defined by a list with their start and end points.
+            - segment is enclosed by 2 veins -> returns [left_seg, right_seg]
+            - segment is enclosed by 3+ veins -> returns []"""
 
+            # left on right cases
+            a = right_vein[1].pos
+            b = right_vein[0].pos
+            c = left_vein[0].pos
+            left_on_right = math.dist(a, c) + math.dist(b, c) == math.dist(a, b);
 
+            # right on left cases
+            a = left_vein[1].pos
+            b = left_vein[0].pos
+            c = right_vein[0].pos
+            right_on_left = math.dist(a, c) + math.dist(b, c) == math.dist(a, b);
+
+            if right_on_left or left_on_right:
+                if left_on_right:
+                    left_seg = [left_vein[0].pos, left_vein[1].pos]
+                    right_seg = [left_vein[0].pos, right_vein[1].pos]
+                if right_on_left:
+                    right_seg = [right_vein[0].pos, right_vein[1].pos]
+                    left_seg = [right_vein[0].pos, left_vein[1].pos]
+                return [left_seg, right_seg]
+            return []
+
+        def find_surrounding_veins(self):
+            """Given a margin segment of points with their two surrounding cp's,
+            this function finds the veins that surround that segment."""
+
+            # helper function
+            def evaluate_cases(left_vein, right_vein):
+                """Evaluates three cases for an iterative call:
+                - only the primordium vein exists -> returns [left_vein]
+                - segment is enclosed by 2 veins -> returns [left_seg, right_seg]
+                - segment is enclosed by 3+ veins -> returns []"""
+                # case: only primordium vein
+                if left_vein == right_vein:
+                    return [[left_vein[0].pos, left_vein[1].pos]]
+                else:
+                    return self.find_intersection(left_vein, right_vein)
+
+            # find surrounding veins of cp
+            assoc_left = self.pts_segment[0].vein_assoc
+            assoc_right = self.pts_segment[-1].vein_assoc
+            right_side = (self.pts_segment[0].pos[0]) >= 0 and (self.pts_segment[-1].pos[0]) >= 0
+            # initialize base case of intersecting veins
+
+            left_cp_vein = [assoc_left[-1].start_point, assoc_left[-1].end_point]
+            right_cp_vein = [assoc_right[-1].start_point, assoc_right[-1].end_point]
+            # print(f"left_cp_vein {left_cp_vein}")
+            # print(f"right_cp_vein{right_cp_vein}")
+            total_seg = evaluate_cases(left_cp_vein, right_cp_vein)
+            print(f"len{len(assoc_left), len(assoc_right)}, total_seg: {total_seg}")
+            if total_seg:
+                return total_seg
+            # recursion is necessery
+            else:
+                total_seg = [left_cp_vein, right_cp_vein]
+                # find intersection of the next associated veins
+                for i in (range(2, max(len(assoc_left), len(assoc_right)))):
+                    # TODO see if its necessary to cap at minimum length i.e.
+                    i_left = min(len(assoc_left), i)
+                    i_right = min(len(assoc_right), i)
+                    # only consider parts within segment, so cut of the vein to the required part
+                    if right_side:
+                        print(f"len{len(assoc_left), len(assoc_right)}, i: {i}, i-1: {-(i-1)}")
+                        left_vein = [assoc_left[-i_left].start_point, assoc_left[-(i-1)].start_point]
+                        right_vein = [assoc_right[-(i-1)].start_point, assoc_right[- i_right].end_point]
+                    else:
+                        print(f"len{len(assoc_left), len(assoc_right)}, i: {i}, i-1: {-(i-1)}")
+                        left_vein = [assoc_left[-(i-1)].start_point, assoc_left[-i_left].end_point]
+                        right_vein = [assoc_right[- i_right].start_point, assoc_right[-(i-1)].start_point]
+                    temp_seg = evaluate_cases(left_vein, right_vein)
+                    # add found segment intersection to segment list
+                    if temp_seg:
+                        total_seg[-1:-1] = temp_seg
+                        return total_seg
 
