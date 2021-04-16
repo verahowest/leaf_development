@@ -283,7 +283,6 @@ class Leaf:
                 total_seg = [left_cp_vein, right_cp_vein]
                 # find intersection of the next associated veins
                 for i in (range(2, max(len(assoc_left), len(assoc_right)))):
-                    # TODO see if its necessary to cap at minimum length i.e.
                     i_left = min(len(assoc_left), i)
                     i_right = min(len(assoc_right), i)
                     # only consider parts within segment, so cut of the vein to the required part

@@ -56,11 +56,12 @@ def plot_leaf_segments(leaf, dim, path, name, step):  # base_point, all_veins, m
         plt.plot(segments_x[i], segments_y[i], color=np.random.rand(3,))
         # draw fill segments between veins
         # vein_seg = leaf.segments[i].vein_segment
+        print(f"segments_y {segments_y}")
         vein_seg = leaf.segments[i].vein_segment
-        vein_seg_x = [i[0] for vein in vein_seg for i in vein]
-        vein_seg_y = [i[1] for vein in vein_seg for i in vein]
-        x_fill= vein_seg_x + segments_x[i]
-        y_fill= vein_seg_y + segments_y[i]
+        # vein_seg_x = [i[0] for vein in vein_seg for i in vein]
+        # vein_seg_y = [i[1] for vein in vein_seg for i in vein]
+        x_fill = segments_x[i]
+        y_fill = segments_y[i]
         print(f"x_fill: {x_fill}")
         print(f"y_fill: {y_fill}")
 

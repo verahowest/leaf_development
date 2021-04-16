@@ -21,10 +21,7 @@ def main():
         expand_veins(leaf, GR, INTERPOLATION, CP_TH)
         # modification of morphogen distribution
 
-        # new convergence points & possible new morphogen distribution
-        # if i < 0:
-        #     hard_coded_cp_addition(leaf)
-        # else:
+        # introducing new cp's after margin growth
         introduce_new_cp(leaf, CP_TH, INTERPOLATION)
         print(f"len of margin: {len(leaf.margin.points)}")
         print(f"all cp len: {len(leaf.margin.all_cp)}")
