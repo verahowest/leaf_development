@@ -7,7 +7,7 @@ STEPS = 30 #simulation steps
 INTERPOLATION = 2 #number of points to interpolate between margin points (min 1)
 GR = 0.2 #growth rate
 CP_TH = 7 #threshold distance for cp creation
-KV = 0.5 #vasculatory auxin movement rate
+KV = 0.1 #vasculatory auxin movement rate
 LEAF_PATH = "../img/plot_data/" #where to save plot data
 BASE_NAME = "leaf_" #base name of plots
 
