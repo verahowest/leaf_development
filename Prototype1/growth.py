@@ -1,5 +1,6 @@
 import numpy as np
 from sklearn.metrics.pairwise import euclidean_distances
+from math import tan
 from scipy.interpolate import interp1d
 from leafstructure import Point, Vein, Margin, Leaf
 
@@ -10,6 +11,11 @@ def normalize_vec(vec):
     """Normalizes a directional vector"""
     norm_vec = vec / np.sqrt((vec ** 2).sum())
     return norm_vec
+
+def get_magnitude(vec):
+    """Get the magnitude of a vector"""
+    mag = np.sqrt(vec.dot(vec))
+    return mag
 
 def normalize_to_range(vec, old_range, fit_range):
     """Normalizes a vector to a given range. as adapted from sklearn:
@@ -211,22 +217,26 @@ def introduce_new_cp(leaf, cp_th, interpolation):
     return 1
 
 
-def find_optimal_angle(segment, kv):
-    """Finds the optimal vein angle by applying cos-1(kv/km)"""
-
-    theta = np.arccos(kv/1)
-
-    return theta
-
-
-def create_anchor_point(cp, vein_assoc):
+def create_anchor_point(cp, vein_assoc, theta):
     """draws a perpendicular line to the given vein.
     Later this can be done with a theta adjustment."""
-    # find anchor point
     vein = vein_assoc[-1]
-    anchor = vector_projection(cp.pos, vein.get_vector())
-    anchor_pt = Point(anchor.tolist(), 0, vein_assoc, 0, 0)
+    if theta == 0:
+        anchor_pos = vein.start_point.pos
+    else:
+        # find orthogonal point by vector projection
+        orthogonal_pt = vector_projection(cp.pos, vein.get_vector())
+        if theta == 1:
+            anchor_pos =  orthogonal_pt.to_list()
+        else:
+            # TODO! check if the orthogonal side is correct!
+            orthogonal_side = get_magnitude(orthogonal_pt - np.array(cp.pos))
+            dir = -1 * normalize_vec(vein.get_vector())
+            offset = orthogonal_side / tan(theta)
+            # TODO! check if types are correct!
+            anchor_pos = orthogonal_pt + dir * offset
 
+    anchor_pt = Point(anchor_pos, 0, vein_assoc, 0, 0)
     # add anchor point to corresponding vein
     vein.insert_point(anchor_pt)
 
@@ -236,7 +246,7 @@ def create_anchor_point(cp, vein_assoc):
 def vein_addition(leaf, kv):
     """Connects unconnected Cp's with vein and adds new vein to leaf."""
     segments = leaf.define_segments()
-    # theta_anchor_pt = find_optimal_angle(segment, kv)
+    km = 1
 
     # print(f"segments: {segments}")
 
@@ -248,20 +258,15 @@ def vein_addition(leaf, kv):
             continue
         else:
             # create new vein
-            # TODO! replace create_anchor_point by find_optimal_angle etc
-            print(f"cp.vein_assoc:, {len(cp.vein_assoc), cp.vein_assoc}")
-            anchor_pt = create_anchor_point(cp, cp.vein_assoc)
+            theta = np.arccos(kv / km)
+            print(f"theta: {theta}")
+            anchor_pt = create_anchor_point(cp, cp.vein_assoc, theta)
             new_vein = Vein([anchor_pt, cp], anchor_pt, cp)
             print(f"new_vein:, {new_vein}")
             # add vein to vein assoc
             anchor_pt.has_vein = 1
             cp.connect_to_new_vein(new_vein)
             cp.has_vein = 1
-
             # add vein to leaf
             leaf.add_vein(new_vein)
-            print(f"cp.vein_assoc:, {len(cp.vein_assoc), cp.vein_assoc}")
-            print(f"leaf.all_veins:, {len(leaf.all_veins), leaf.all_veins}")
-
-
     return leaf

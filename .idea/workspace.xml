@@ -2,18 +2,44 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3ed38e10-9546-4849-9c9c-fd740011f06c" name="Default Changelist" comment="pre-meeting commit">
+      <change afterPath="$PROJECT_DIR$/Prototype1/flowchart.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_16.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_17.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_18.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_19.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_20.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_21.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_22.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_23.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_24.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_25.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_26.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_27.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_28.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_29.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_30.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/leaf_development.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/leaf_development.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Prototype1/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/Main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Prototype1/growth.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/growth.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Prototype1/leafstructure.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/leafstructure.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Prototype1/visualization.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/visualization.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_0.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_0.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_10.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_10.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_11.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_11.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_12.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_12.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_13.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_13.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_14.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_14.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_15.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_15.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_2.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_2.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_3.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_3.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_4.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_4.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_5.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_5.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_6.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_6.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_7.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_7.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_8.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_8.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_9.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_9.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,12 +77,40 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Documents/GitHub/leaf_development" />
     <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
+  <component name="PyConsoleOptionsProvider">
+    <option name="myPythonConsoleState">
+      <console-settings>
+        <option name="useSoftWraps" value="true" />
+      </console-settings>
+    </option>
+  </component>
   <component name="RunManager" selected="Python.Main">
-    <configuration name="Main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="Main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="D:\Dropbox\howest\DAEResearch\Implementation\venv\Scripts\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Prototype1" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Prototype1/Main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="flowchart" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="leaf_development" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -68,7 +122,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Prototype1/Main.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Prototype1/flowchart.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -100,7 +154,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.Main" />
+        <item itemvalue="Python.flowchart" />
         <item itemvalue="Python.testing_functionality" />
       </list>
     </recent_temporary>
