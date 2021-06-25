@@ -1,7 +1,7 @@
 from default_setup import *
 import visualization as vis
 from growth import *
-import matplotlib.pyplot as plt
+import export as export
 
 STEPS = 30 #simulation steps
 INTERPOLATION = 2 #number of points to interpolate between margin points (min 1)
@@ -10,9 +10,11 @@ CP_TH = 7 #threshold distance for cp creation
 KV = 0.1 #vasculatory auxin movement rate
 LEAF_PATH = "../img/plot_data/" #where to save plot data
 BASE_NAME = "leaf_" #base name of plots
+CSV_PATH = "../data/leaf_export"
 
 def main():
     """Adapted from Runions et al. 2017 approach for leaf development"""
+    leaf_param = [STEPS, INTERPOLATION, GR, CP_TH, KV]
     leaf = initialize_default_leaf()
     vis.plot_leaf_segments(leaf, 15, LEAF_PATH, BASE_NAME, 0)
     for i in range(STEPS):
@@ -31,6 +33,7 @@ def main():
 
         # plot leaf
         vis.plot_leaf_segments(leaf, 15, LEAF_PATH, BASE_NAME, i+1)
+    export.export_leaf(leaf, CSV_PATH)
 
 
 if __name__ == "__main__":
