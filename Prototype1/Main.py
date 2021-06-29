@@ -4,10 +4,11 @@ from growth import *
 import export as export
 
 STEPS = 30 #simulation steps
-INTERPOLATION = 2 #number of points to interpolate between margin points (min 1)
-GR = 0.2 #growth rate
-CP_TH = 7 #threshold distance for cp creation
-KV = 0.1 #vasculatory auxin movement rate
+INTERPOLATION = 3 #number of points to interpolate between margin points (min 1)
+GR = 0.1 #growth rate
+GD = 0.02 #directional growth
+CP_TH = 8 #threshold distance for cp creation
+KV = 0.4 #vasculatory auxin movement rate
 LEAF_PATH = "../img/plot_data/" #where to save plot data
 BASE_NAME = "leaf_" #base name of plots
 CSV_PATH = "../data/leaf_export"
@@ -20,7 +21,7 @@ def main():
     for i in range(STEPS):
         print(f"----------STEP {i}----------")
         # growstep driven by expansion of veins
-        expand_veins(leaf, GR, INTERPOLATION, CP_TH)
+        expand_veins(leaf, GR, GD, INTERPOLATION, CP_TH)
         # modification of morphogen distribution
 
         # introducing new cp's after margin growth

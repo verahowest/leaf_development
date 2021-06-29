@@ -102,7 +102,7 @@ def init_cp_indicators(leaf, interpolation):
             prev_i = i
     return cp_indicators, cp_index
 
-def calculate_gr(dist, dir, gr, cp_th):
+def calculate_gr(dist, dir, gr, dir_growth, cp_th):
     """multiply direction * gr * distance and
     normalize this to half the max distance."""
 
@@ -112,16 +112,20 @@ def calculate_gr(dist, dir, gr, cp_th):
 
     temp_growth = (gr * normalize_to_range(dir, old_range, fit_range)) / dist
     # print(f"dist { dist} temp_growth: {temp_growth}")
+    temp_growth = temp_growth + dir_growth
+    # print(f"dir_growth { dir_growth} temp_growth: {temp_growth}")
     return temp_growth
 
 
-def expand_veins(leaf, gr, interpolation, cp_th):
+def expand_veins(leaf, gr, gd, interpolation, cp_th):
     """Expand the cp on margin in the direction of their veins by a growth rate (gr)"""
     # initialize growth and interpolate margin where necessary
     init_cp_indicators(leaf, interpolation)
     segments = leaf.define_segments()
     gr_total = np.zeros((len(leaf.margin.points), 2))
-    prev_vein_dir = -1 * normalize_vec(leaf.primordium_vein.get_vector())
+    prim_vein_dir = normalize_vec(leaf.primordium_vein.get_vector())
+    prev_vein_dir = -1 * prim_vein_dir
+    dir_growth = gd * prim_vein_dir
 
     # calculate growth rate for each segment
     for s in segments:
@@ -138,11 +142,11 @@ def expand_veins(leaf, gr, interpolation, cp_th):
             next_vein_dir = -1 * normalize_vec(leaf.primordium_vein.get_vector())
 
         # add to array of gr values
-        temp_prev = calculate_gr(prev_dist, prev_vein_dir, gr, cp_th)
-        temp_next = calculate_gr(next_dist, next_vein_dir, gr, cp_th)
+        temp_prev = calculate_gr(prev_dist, prev_vein_dir, gr, dir_growth, cp_th)
+        temp_next = calculate_gr(next_dist, next_vein_dir, gr, dir_growth, cp_th)
         if s.margin_slices[1] != 0:
             # add cp growth rates
-            gr_total[(s.margin_slices[1])-1] = np.multiply(next_vein_dir, gr)
+            gr_total[(s.margin_slices[1])-1] = np.multiply(next_vein_dir, gr) + (dir_growth * 2)
             # add non cp growth rates
             gr_total[(s.margin_slices[0]+1):(s.margin_slices[1]-1)] = temp_next + temp_prev
         else:
@@ -227,13 +231,11 @@ def create_anchor_point(cp, vein_assoc, theta):
         # find orthogonal point by vector projection
         orthogonal_pt = vector_projection(cp.pos, vein.get_vector())
         if theta == 1:
-            anchor_pos =  orthogonal_pt.to_list()
+            anchor_pos = orthogonal_pt.to_list()
         else:
-            # TODO! check if the orthogonal side is correct!
             orthogonal_side = get_magnitude(orthogonal_pt - np.array(cp.pos))
             dir = -1 * normalize_vec(vein.get_vector())
             offset = orthogonal_side / tan(theta)
-            # TODO! check if types are correct!
             anchor_pos = orthogonal_pt + dir * offset
 
     anchor_pt = Point(anchor_pos, 0, vein_assoc, 0, 0)
@@ -252,14 +254,14 @@ def vein_addition(leaf, kv):
 
     for cp_i in range(len(leaf.margin.all_cp)):
         cp = leaf.margin.all_cp[cp_i]
-        print(f"creating new vein for: {cp}")
+        # print(f"creating new vein for: {cp}")
         if cp.has_vein == 1:  # skip if already connected to a vein
-            print("has vein")
+            # print("has vein")
             continue
         else:
             # create new vein
             theta = np.arccos(kv / km)
-            print(f"theta: {theta}")
+            # print(f"theta: {theta}")
             anchor_pt = create_anchor_point(cp, cp.vein_assoc, theta)
             new_vein = Vein([anchor_pt, cp], anchor_pt, cp)
             print(f"new_vein:, {new_vein}")
