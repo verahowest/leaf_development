@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib import collections  as mc
-
+from matplotlib import collections as mc
+from scipy.spatial import ConvexHull
 
 # def print_points(points):
 #     for i in range(0, len(points)):
@@ -48,8 +48,17 @@ def plot_leaf_segments(leaf, dim, path, name, step):  # base_point, all_veins, m
     plt.plot(x_margin, y_margin, '-ko')
 
     # plot margin segments
-    segments_x, segments_y = leaf.define_segments_pos()
-    # print(f"total len: {len(leaf.margin.points)}, nr of seg: {len(segments_x)}")
+    for segment in leaf.segments:
+        print(f"amount of segments: {len(leaf.segments)}, len of seg: {len(segment.all_pts_pos)}")
+        print(segment.all_pts_pos)
+        pts = np.array(segment.all_pts_pos)
+        hull = ConvexHull(pts)
+
+        plt.fill(pts[hull.vertices, 0], pts[hull.vertices, 1], color=np.random.rand(3, ), alpha=0.5)
+
+    # # plot margin segments
+    # segments_x, segments_y = leaf.define_segments_pos()
+    # # print(f"total len: {len(leaf.margin.points)}, nr of seg: {len(segments_x)}")
     # for i in range(0, len(segments_x)):
     #     # print(f"part len: {len(segments_x[i])}")
     #     # draw margin boundary

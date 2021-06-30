@@ -2,12 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3ed38e10-9546-4849-9c9c-fd740011f06c" name="Default Changelist" comment="export to houdini added">
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_6_21_2021_9_18_AM_[Default_Changelist]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_6_21_2021_9_18_AM__Default_Changelist_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Prototype1/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/Main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Prototype1/default_setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/default_setup.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Prototype1/growth.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/growth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Prototype1/leafstructure.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/leafstructure.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Prototype1/testing_functionality.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/testing_functionality.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Prototype1/visualization.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/visualization.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/leaf_exportmargin.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/leaf_exportmargin.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/leaf_exportveins.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/leaf_exportveins.csv" afterDir="false" />
@@ -157,8 +157,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.flowchart" />
         <item itemvalue="Python.testing_functionality" />
+        <item itemvalue="Python.flowchart" />
       </list>
     </recent_temporary>
   </component>
@@ -283,7 +283,14 @@
       <option name="project" value="LOCAL" />
       <updated>1624645335109</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="adapted directional growth">
+      <created>1624993600169</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1624993600169</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -312,6 +319,7 @@
     <MESSAGE value="created debug-colours for entire segments of veins, bug in vein intersection of leaf structure, no math implemented yet" />
     <MESSAGE value="pre-meeting commit" />
     <MESSAGE value="export to houdini added" />
-    <option name="LAST_COMMIT_MESSAGE" value="export to houdini added" />
+    <MESSAGE value="adapted directional growth" />
+    <option name="LAST_COMMIT_MESSAGE" value="adapted directional growth" />
   </component>
 </project>

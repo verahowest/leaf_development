@@ -124,22 +124,22 @@ def expand_veins(leaf, gr, gd, interpolation, cp_th):
     segments = leaf.define_segments()
     gr_total = np.zeros((len(leaf.margin.points), 2))
     prim_vein_dir = normalize_vec(leaf.primordium_vein.get_vector())
-    prev_vein_dir = -1 * prim_vein_dir
+    prev_vein_dir = 0 * prim_vein_dir
     dir_growth = gd * prim_vein_dir
 
     # calculate growth rate for each segment
     for s in segments:
         # only feed positions left and right of cp to the distance function
-        prev_cp = s.pts_segment[0]
-        next_cp = s.pts_segment[-1]
-        prev_dist, next_dist = bounding_distances(s.pts_segment[1:-1], prev_cp, next_cp)
+        prev_cp = s.margin_pts_segment[0]
+        next_cp = s.margin_pts_segment[-1]
+        prev_dist, next_dist = bounding_distances(s.margin_pts_segment[1:-1], prev_cp, next_cp)
 
         # get new growth dir
         if s.margin_slices[1] != 0:
             next_vein = next_cp.vein_assoc[-1]
             next_vein_dir = normalize_vec(next_vein.get_vector())
         else:
-            next_vein_dir = -1 * normalize_vec(leaf.primordium_vein.get_vector())
+            next_vein_dir = 0 * normalize_vec(leaf.primordium_vein.get_vector())
 
         # add to array of gr values
         temp_prev = calculate_gr(prev_dist, prev_vein_dir, gr, dir_growth, cp_th)
@@ -249,6 +249,7 @@ def vein_addition(leaf, kv):
     """Connects unconnected Cp's with vein and adds new vein to leaf."""
     segments = leaf.define_segments()
     km = 1
+    theta = np.arccos(kv / km)
 
     # print(f"segments: {segments}")
 
@@ -256,12 +257,9 @@ def vein_addition(leaf, kv):
         cp = leaf.margin.all_cp[cp_i]
         # print(f"creating new vein for: {cp}")
         if cp.has_vein == 1:  # skip if already connected to a vein
-            # print("has vein")
             continue
         else:
             # create new vein
-            theta = np.arccos(kv / km)
-            # print(f"theta: {theta}")
             anchor_pt = create_anchor_point(cp, cp.vein_assoc, theta)
             new_vein = Vein([anchor_pt, cp], anchor_pt, cp)
             print(f"new_vein:, {new_vein}")
