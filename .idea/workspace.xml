@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3ed38e10-9546-4849-9c9c-fd740011f06c" name="Default Changelist" comment="export to houdini added">
+    <list default="true" id="3ed38e10-9546-4849-9c9c-fd740011f06c" name="Default Changelist" comment="debugged segments surrounding vein in preperation for secundary veins">
+      <change beforePath="$PROJECT_DIR$/.idea/leaf_development.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/leaf_development.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Prototype1/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/Main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Prototype1/default_setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/default_setup.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Prototype1/growth.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/growth.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Prototype1/leafstructure.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/leafstructure.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Prototype1/testing_functionality.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/testing_functionality.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Prototype1/visualization.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/visualization.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/leaf_exportmargin.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/leaf_exportmargin.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/leaf_exportveins.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/leaf_exportveins.csv" afterDir="false" />
@@ -82,7 +82,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$USER_HOME$/Documents/GitHub/leaf_development" />
     <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -93,17 +93,17 @@
   </component>
   <component name="RunManager" selected="Python.Main">
     <configuration name="Main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="leaf_development" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="D:\Dropbox\howest\DAEResearch\Implementation\venv\Scripts\python.exe" />
+      <option name="SDK_HOME" value="C:\Users\lelle\Documents\Leaf_Laptop\venv\Scripts\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Prototype1" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Prototype1/Main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -155,6 +155,11 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Python.Main" />
+      <item itemvalue="Python.flowchart" />
+      <item itemvalue="Python.testing_functionality" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.testing_functionality" />
@@ -290,12 +295,24 @@
       <option name="project" value="LOCAL" />
       <updated>1624993600169</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="debugged segments surrounding vein in preperation for secundary veins">
+      <created>1625051302120</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1625051302120</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
+        <entry key="1">
+          <value>
+            <State />
+          </value>
+        </entry>
         <entry key="MAIN">
           <value>
             <State />
@@ -320,6 +337,7 @@
     <MESSAGE value="pre-meeting commit" />
     <MESSAGE value="export to houdini added" />
     <MESSAGE value="adapted directional growth" />
-    <option name="LAST_COMMIT_MESSAGE" value="adapted directional growth" />
+    <MESSAGE value="debugged segments surrounding vein in preperation for secundary veins" />
+    <option name="LAST_COMMIT_MESSAGE" value="debugged segments surrounding vein in preperation for secundary veins" />
   </component>
 </project>

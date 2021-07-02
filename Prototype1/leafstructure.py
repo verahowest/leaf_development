@@ -12,7 +12,7 @@ class Point:
         self.has_vein = has_vein
 
     def __repr__(self):
-        return repr((self.pos, self.is_cp, len(self.vein_assoc), self.has_morphogen, self.has_vein))
+        return repr((self.pos))
 
     def comparator(ptA, ptB):
         """Sort by increasing y pos, and if equal increasing x pos"""
@@ -180,10 +180,10 @@ class Leaf:
         segments = []
         cp_indicators, cp_index = self.margin.get_cp_indicators()
         cp_amount = len(self.margin.all_cp)
-        print(f", cp_amount: {cp_amount}")
+        # print(f", cp_amount: {cp_amount}")
         prev_i = 0
         for i in range(0, len(cp_index)+1):
-            print(f"cp_i : {i}")
+            # print(f"cp_i : {i}")
             if i >= len(cp_index):
                 end_segment_pts = self.margin.points[prev_i:]
                 end_segment_pts.append(self.margin.points[0])
@@ -196,6 +196,7 @@ class Leaf:
                 prev_i = cp_index[i]
 
         if len(segments) == (len(cp_index) + 1):
+            self.segments = segments
             return segments
         else:
             return 1
@@ -229,6 +230,8 @@ class Leaf:
             self.vein_segment = self.find_surrounding_veins()
             self.all_pts_pos = self.get_all_pts_pos()
 
+        def __repr__(self):
+            return repr((self.margin_pts_segment, self.cp_amount, self.vein_segment, self.vein_segment, self.all_pts_pos))
 
         # helper function
         def find_intersection(self, left_vein, right_vein):
@@ -251,7 +254,7 @@ class Leaf:
 
             if right_on_left or left_on_right:
                 if left_on_right:
-                    print("left_on_right")
+                    # print("left_on_right")
                     left_seg = [left_vein[0].pos, left_vein[1].pos]
                     # check whether x of endpoint vein is > or < 0
                     if left_vein[1].pos[0] < 0:
@@ -259,7 +262,7 @@ class Leaf:
                     else:
                         right_seg = [right_vein[0].pos, left_vein[0].pos]
                 if right_on_left:
-                    print("right_on_left")
+                    # print("right_on_left")
                     right_seg = [right_vein[0].pos, right_vein[1].pos]
                     if right_vein[1].pos[0] < 0:
                         left_seg = [left_vein[0].pos, right_vein[0].pos]
@@ -268,7 +271,7 @@ class Leaf:
                 return [left_seg, right_seg]
             # TODO! check if this breaks everything
             else:
-                print("defining middle segment")
+                # print("defining middle segment")
                 left_seg = [left_vein[0].pos, left_vein[1].pos]
                 right_seg = [right_vein[0].pos, right_vein[1].pos]
                 middle_seg = [left_vein[0].pos, right_vein[0].pos]
@@ -300,15 +303,15 @@ class Leaf:
             # initialize base case of intersecting veins
             left_cp_vein = [assoc_left[-1].start_point, assoc_left[-1].end_point]
             right_cp_vein = [assoc_right[-1].start_point, assoc_right[-1].end_point]
-            print(f"left_cp_vein {left_cp_vein}")
-            print(f"right_cp_vein{right_cp_vein}")
-            print("evaluating cases....")
+            # print(f"left_cp_vein {left_cp_vein}")
+            # print(f"right_cp_vein{right_cp_vein}")
+            # print("evaluating cases....")
             total_seg = evaluate_cases(left_cp_vein, right_cp_vein)
-            print(f"len{len(assoc_left), len(assoc_right)}, total_seg: {total_seg}")
+            # print(f"len{len(assoc_left), len(assoc_right)}, total_seg: {total_seg}")
             # if ((len(assoc_left) == 1) & (len(assoc_right) == 1)) & (self.cp_amount >= 2):
             #     total_seg = []
             if total_seg:
-                print("gonna return total_seg")
+                # print("gonna return total_seg")
                 return total_seg
             # # recursion is necessery
             # else:
