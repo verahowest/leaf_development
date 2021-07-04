@@ -67,7 +67,7 @@ def plot_leaf_segments(leaf, dim, path, name, step):  # base_point, all_veins, m
     x_cp, y_cp, pos_cp = leaf.margin.get_cp_pos()
     plt.plot(x_cp, y_cp, 'yo')
 
-    plt.axis([-dim, dim, -dim/4, dim])
+    plt.axis([-dim, dim, -dim/4, dim*2 -dim/4 ])
     plt.savefig(path + name + "_segments_"+ str(step) + ".png", format="PNG")
     plt.clf()
 

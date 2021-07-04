@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3ed38e10-9546-4849-9c9c-fd740011f06c" name="Default Changelist" comment="debugged segments surrounding vein in preperation for secundary veins">
-      <change beforePath="$PROJECT_DIR$/.idea/leaf_development.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/leaf_development.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="3ed38e10-9546-4849-9c9c-fd740011f06c" name="Default Changelist" comment="secundary veins progress, currently worse before it gets better">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Prototype1/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/Main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Prototype1/growth.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/growth.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Prototype1/leafstructure.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/leafstructure.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Prototype1/visualization.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/visualization.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/leaf_exportmargin.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/leaf_exportmargin.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/leaf_exportveins.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/leaf_exportveins.csv" afterDir="false" />
@@ -302,7 +299,14 @@
       <option name="project" value="LOCAL" />
       <updated>1625051302120</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="secundary veins progress, currently worse before it gets better">
+      <created>1625247277320</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1625247277320</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -338,6 +342,7 @@
     <MESSAGE value="export to houdini added" />
     <MESSAGE value="adapted directional growth" />
     <MESSAGE value="debugged segments surrounding vein in preperation for secundary veins" />
-    <option name="LAST_COMMIT_MESSAGE" value="debugged segments surrounding vein in preperation for secundary veins" />
+    <MESSAGE value="secundary veins progress, currently worse before it gets better" />
+    <option name="LAST_COMMIT_MESSAGE" value="secundary veins progress, currently worse before it gets better" />
   </component>
 </project>

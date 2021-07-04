@@ -14,6 +14,8 @@ def normalize_vec(vec):
 
 def coord_to_vec(start_pos, end_pos):
     "takes two coordinate lists and converts them into a 2D vector"
+    a = start_pos[0]
+    b = start_pos[1]
     vec = np.array(start_pos) - np.array(end_pos)
     return vec
 
@@ -30,11 +32,18 @@ def normalize_to_range(vec, old_range, fit_range):
     vec_scaled = vec_std * (fit_range[1] - fit_range[0]) + fit_range[0]
     return vec_scaled
 
-def vector_projection(a, b):
-    """Calculates the vector projection of a onto b."""
-    proj = (np.dot(a, b) / np.dot(b, b)) * b
-    return proj
+# def vector_projection(a, b):
+#     """Calculates the vector projection of a onto b."""
+#     print(f"vector_projection of a: {a}, b: {b}")
+#     proj = (np.dot(a, b) / np.dot(b, b)) * b
+#     return proj
 
+def vector_projection(start_point, end_point, point):
+    """Calculates the vector projection of a point onto a line."""
+    point_vec = point - start_point
+    line_vec = end_point - start_point
+    proj = start_point + np.dot(point_vec, line_vec)/np.dot(line_vec, line_vec) * line_vec
+    return proj
 
 def distance_matrix(margin, cp):
     """Calculates euclidean distance between each point and a given convergence point"""
@@ -188,7 +197,7 @@ def insert_cp_pos(segment, dist_array, dist_sum):
             break
     return pos
 
-def introduce_new_cp2(leaf, cp_th, interpolation, kv):
+def introduce_new_cp(leaf, cp_th, interpolation, kv):
     """Introduces new cp where the boundary distance exceeds a certain distance threshold"""
     cp_indicators, cp_index = init_cp_indicators(leaf, interpolation)
     segments = leaf.define_segments()
@@ -231,9 +240,10 @@ def find_closest_vein(cp, vein_segment, theta):
         for vein_part in vein_segment:
             print(f"vein_part: {vein_part}")
             vein = coord_to_vec(vein_part[0], vein_part[1])
-            projection = vector_projection(cp.pos, vein)
+            projection = vector_projection(vein_part[0], vein_part[1], cp.pos)
+            print(f"projection: {projection}")
             proj_min, mag_min, vein_min = find_closest_point(cp, projection, vein, proj_min, mag_min, vein_min)
-        offset_dir = 1* normalize_vec(vein_min)
+        offset_dir = normalize_vec(vein_min)
         offset = mag_min / tan(theta)
         anchor_pos = proj_min + offset_dir * offset
     anchor_pt = Point(anchor_pos, 0, cp.vein_assoc, 0, 0)
