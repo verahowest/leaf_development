@@ -1,45 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3ed38e10-9546-4849-9c9c-fd740011f06c" name="Default Changelist" comment="secundary veins progress, currently worse before it gets better">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Prototype1/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/Main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Prototype1/growth.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/growth.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Prototype1/visualization.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/visualization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/leaf_exportmargin.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/leaf_exportmargin.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/leaf_exportveins.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/leaf_exportveins.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_0.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_0.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_1.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_10.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_10.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_11.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_11.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_12.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_12.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_13.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_13.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_14.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_14.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_15.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_15.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_16.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_16.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_17.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_17.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_18.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_18.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_19.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_19.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_2.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_2.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_20.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_20.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_21.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_21.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_22.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_22.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_23.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_23.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_24.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_24.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_25.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_25.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_26.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_26.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_27.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_27.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_28.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_28.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_29.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_29.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_3.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_3.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_30.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_30.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_4.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_4.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_5.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_5.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_6.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_6.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_7.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_7.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_8.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_8.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_9.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_9.png" afterDir="false" />
-    </list>
+    <list default="true" id="3ed38e10-9546-4849-9c9c-fd740011f06c" name="Default Changelist" comment="secundary vein projection is correct, problems in directional growth and segments still" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -306,7 +268,14 @@
       <option name="project" value="LOCAL" />
       <updated>1625247277320</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="secundary vein projection is correct, problems in directional growth and segments still">
+      <created>1625404357830</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1625404357830</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -343,6 +312,7 @@
     <MESSAGE value="adapted directional growth" />
     <MESSAGE value="debugged segments surrounding vein in preperation for secundary veins" />
     <MESSAGE value="secundary veins progress, currently worse before it gets better" />
-    <option name="LAST_COMMIT_MESSAGE" value="secundary veins progress, currently worse before it gets better" />
+    <MESSAGE value="secundary vein projection is correct, problems in directional growth and segments still" />
+    <option name="LAST_COMMIT_MESSAGE" value="secundary vein projection is correct, problems in directional growth and segments still" />
   </component>
 </project>
