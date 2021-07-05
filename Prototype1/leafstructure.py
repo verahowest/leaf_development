@@ -84,8 +84,9 @@ class PointCollection:
 
 
 class Vein(PointCollection):
-    def __init__(self, points, start_point, end_point):
+    def __init__(self, points, start_point, end_point, anchor_pts=[]):
         super().__init__(points, start_point, end_point)
+        self.anchor_pts = anchor_pts
 
     def get_vector(self):
         vein_vec = np.array(self.end_point.pos) - np.array(self.start_point.pos)
@@ -187,11 +188,6 @@ class Margin(PointCollection):
 
         return cp_indicators, cp_index
 
-    def grow(self, gr_total):
-        """Adds the growth array to the current margin positions"""
-        for i in range(len(gr_total)):
-            self.points[i].pos += gr_total[i]
-
 
 class Leaf:
     def __init__(self, base_point, primordium_vein, margin, all_veins):
@@ -204,6 +200,16 @@ class Leaf:
     def add_vein(self, new_vein):
         self.all_veins.append(new_vein)
         self.segments = self.define_segments()
+
+    def grow(self, gr_total, anchors=None):
+        """First adds the growth array to the current margin positions,
+        Then grows the anchor points in their respective direction"""
+        for i in range(len(gr_total)):
+            self.margin.points[i].pos += gr_total[i]
+        if anchors:
+            for anchor_pts, growth in anchors:
+                for pt in anchor_pts:
+                    pt.pos += growth
 
     def define_segments(self):
         """Defines segments as a collection of margin segments
