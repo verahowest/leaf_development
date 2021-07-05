@@ -12,6 +12,7 @@ def normalize_vec(vec):
     norm_vec = vec / np.sqrt((vec ** 2).sum())
     return norm_vec
 
+
 def coord_to_vec(start_pos, end_pos):
     "takes two coordinate lists and converts them into a 2D vector"
     a = start_pos[0]
@@ -19,10 +20,12 @@ def coord_to_vec(start_pos, end_pos):
     vec = np.array(start_pos) - np.array(end_pos)
     return vec
 
+
 def get_magnitude(vec):
     """Get the magnitude of a vector"""
     mag = np.sqrt(vec.dot(vec))
     return mag
+
 
 def normalize_to_range(vec, old_range, fit_range):
     """Normalizes a vector to a given range. as adapted from sklearn:
@@ -31,6 +34,7 @@ def normalize_to_range(vec, old_range, fit_range):
     vec_std = (vec - old_range[0]) / (old_range[1] - old_range[0])
     vec_scaled = vec_std * (fit_range[1] - fit_range[0]) + fit_range[0]
     return vec_scaled
+
 
 # def vector_projection(a, b):
 #     """Calculates the vector projection of a onto b."""
@@ -42,8 +46,9 @@ def vector_projection(start_point, end_point, point):
     """Calculates the vector projection of a point onto a line."""
     point_vec = point - start_point
     line_vec = end_point - start_point
-    proj = start_point + np.dot(point_vec, line_vec)/np.dot(line_vec, line_vec) * line_vec
+    proj = start_point + np.dot(point_vec, line_vec) / np.dot(line_vec, line_vec) * line_vec
     return proj
+
 
 def distance_matrix(margin, cp):
     """Calculates euclidean distance between each point and a given convergence point"""
@@ -56,7 +61,6 @@ def bounding_distances(list_of_pts, left_pt, right_pt):
     """Calculates the distance to the left and right vein for each point in a margin section.
     For this purpose the base point is treated as a convergence point."""
     pos = []
-
     for point in list_of_pts:
         pos.append(point.pos)
     # calculate distances to left
@@ -69,10 +73,10 @@ def bounding_distances(list_of_pts, left_pt, right_pt):
     return euc_res_left, euc_res_right
 
 
-def interpolate_pts(pt_A, pt_B, leaf, mustAdd, interpolation):
+def interpolate_pts(pt_a, pt_b, leaf, must_add, interpolation):
     """Given two positions a new point is created between these points by linear interpolation"""
-    x = [pt_A.pos[0], pt_B.pos[0]]
-    y = [pt_A.pos[1], pt_B.pos[1]]
+    x = [pt_a.pos[0], pt_b.pos[0]]
+    y = [pt_a.pos[1], pt_b.pos[1]]
     num_interp = 2 + interpolation
 
     xnew = np.linspace(x[0], x[1], num=num_interp, endpoint=True)
@@ -80,10 +84,12 @@ def interpolate_pts(pt_A, pt_B, leaf, mustAdd, interpolation):
     ynew = f(xnew)
 
     # for each interpolation point
-    if mustAdd:
+    points_to_add = []
+    if must_add:
         for i in range(1, interpolation + 1):
             new_pt = Point([xnew[i], ynew[i]], 0, leaf.primordium_vein, 0, 0)
-            leaf.margin.insert_point(new_pt)
+            points_to_add.append(new_pt)
+        leaf.margin.add_neighbours(points_to_add, pt_left=pt_a, pt_right=pt_b, is_interpolation=True)
         return 0
     return [xnew[1], ynew[1]]
 
@@ -109,20 +115,22 @@ def init_cp_indicators(leaf, interpolation):
         # interpolate if there are no points between cp
         for i in range(1, len(cp_index)):
             if (cp_index[i] - cp_index[prev_i]) <= 1:
-                interpolate_pts(leaf.margin.points[cp_index[prev_i]], leaf.margin.points[cp_index[i]], leaf, True, interpolation)
+                interpolate_pts(leaf.margin.points[cp_index[prev_i]], leaf.margin.points[cp_index[i]], leaf, True,
+                                interpolation)
                 # recalculate cp_indicators
                 cp_indicators, cp_index = leaf.margin.get_cp_indicators()
                 # print(f"cp_indicators:  {cp_indicators}, cp_index: {cp_index}")
             prev_i = i
     return cp_indicators, cp_index
 
+
 def calculate_gr(dist, dir, gr, cp_th):
     """multiply direction * gr * distance and
     normalize this to half the max distance."""
 
     # TODO ! improve fit, division by 0 not possible
-    old_range = [-cp_th , cp_th]
-    fit_range = [-cp_th/2, cp_th/2]
+    old_range = [-cp_th, cp_th]
+    fit_range = [-cp_th / 2, cp_th / 2]
 
     temp_growth = (gr * normalize_to_range(dir, old_range, fit_range)) / dist
     # temp_growth = (gr * dir) / dist
@@ -142,7 +150,7 @@ def expand_veins(leaf, gr, gd, interpolation, cp_th):
     prev_vein_dir = 0 * prim_vein_dir
     # calculate directional growth
     dir_dist = distance_matrix(leaf.margin, leaf.primordium_vein.end_point)
-    dir_growth = normalize_to_range(dir_dist, [0,max(dir_dist)], [1,0]) * gd
+    dir_growth = normalize_to_range(dir_dist, [0, max(dir_dist)], [1, 0]) * gd
     dir_growth = np.insert(dir_growth, 0, np.zeros(len(gr_total)), axis=1)
 
     # calculate growth rate for each segment
@@ -164,11 +172,11 @@ def expand_veins(leaf, gr, gd, interpolation, cp_th):
         temp_next = calculate_gr(next_dist, next_vein_dir, gr, cp_th)
         if s.margin_slices[1] != 0:
             # add cp growth rates
-            gr_total[(s.margin_slices[1])-1] = np.multiply(next_vein_dir, gr)
+            gr_total[(s.margin_slices[1]) - 1] = np.multiply(next_vein_dir, gr)
             # add non cp growth rates
-            gr_total[(s.margin_slices[0]+1):(s.margin_slices[1]-1)] = temp_next + temp_prev
+            gr_total[(s.margin_slices[0] + 1):(s.margin_slices[1] - 1)] = temp_next + temp_prev
         else:
-            gr_total[(s.margin_slices[0]+1):] = temp_next + temp_prev
+            gr_total[(s.margin_slices[0] + 1):] = temp_next + temp_prev
             print(f"gr_total: {gr_total}")
             gr_total = gr_total + dir_growth
             leaf.margin.grow(gr_total)
@@ -188,6 +196,7 @@ def calculate_margin_distance(margin_part):
     dist_sum = dist_array.sum()
     return dist_array, dist_sum
 
+
 def insert_cp_pos(segment, dist_array, dist_sum):
     """Inserts a new cp in the middle of two cps."""
     margin_part = segment.margin_pts_segment
@@ -198,9 +207,12 @@ def insert_cp_pos(segment, dist_array, dist_sum):
         temp_dist += dist_array[i]
         if temp_dist >= middle:
             pos = interpolate_pts(margin_part[i - 1], margin_part[i], None, False, 1)
+            left_pt = margin_part[i - 1]
+            right_pt = margin_part[i]
             # print(f"interpolated position: {pos}")
             break
-    return pos
+    return pos, left_pt, right_pt
+
 
 def introduce_new_cp(leaf, cp_th, interpolation, kv):
     """Introduces new cp where the boundary distance exceeds a certain distance threshold"""
@@ -213,14 +225,16 @@ def introduce_new_cp(leaf, cp_th, interpolation, kv):
         dist_array, dist_sum = calculate_margin_distance(segment.margin_pts_segment)
         if cp_th < dist_sum:
             print(f"new cp to add at: ")
-            new_cp_pos = insert_cp_pos(segment, dist_array, dist_sum)
+            new_cp_pos, left_pt, right_pt = insert_cp_pos(segment, dist_array, dist_sum)
             print(f"pos :{new_cp_pos}")
-            new_vein, new_cp = create_vein(leaf, segment, kv, new_cp_pos, [leaf.primordium_vein])
+            new_cp = Point(new_cp_pos, 1, [leaf.primordium_vein], 0, 0, [left_pt, right_pt])
+            new_vein, new_cp = create_vein(leaf, segment, kv, new_cp)
             print(f"with new vein :{new_vein}")
-            leaf.margin.insert_point(new_cp)
+            leaf.margin.add_neighbours([new_cp])
             leaf.margin.check_conv_points()
     leaf.define_segments()
     return leaf
+
 
 def find_closest_vein(cp, vein_segment, theta):
     """Given a vein segment this functions find the shortest anchor point with angle theta to create a vein"""
@@ -252,20 +266,18 @@ def find_closest_vein(cp, vein_segment, theta):
         offset = mag_min / tan(theta)
         anchor_pos = proj_min + offset_dir * offset
     anchor_pt = Point(anchor_pos, 0, cp.vein_assoc, 0, 0)
-    # add anchor point to corresponding vein
-    # vein.insert_point(anchor_pt)
 
     return anchor_pt
 
 
-def create_vein(leaf, segment, kv, pos, vein_assoc):
+def create_vein(leaf, segment, kv, new_cp):
     """Connects unconnected Cp's with vein and adds new vein to leaf."""
     # segments ok but vein addition problem cp has vein = 0
     km = 1
     theta = np.arccos(kv / km)
     # create new vein
-    print(f"creating new vein for: {pos}")
-    new_cp = Point(pos, 1, vein_assoc, 0, 0)
+    # print(f"creating new vein for: {pos}")
+    # new_cp = Point(pos, 1, vein_assoc, 0, 0)
     anchor_pt = find_closest_vein(new_cp, segment.vein_segment, theta)
     new_vein = Vein([anchor_pt, new_cp], anchor_pt, new_cp)
     print(f"new_vein:, {new_vein}")
@@ -276,4 +288,3 @@ def create_vein(leaf, segment, kv, pos, vein_assoc):
     # add vein to leaf
     leaf.add_vein(new_vein)
     return new_vein, new_cp
-

@@ -3,13 +3,15 @@ from functools import cmp_to_key
 import numpy as np
 import math
 
+
 class Point:
-    def __init__(self, pos, is_cp, vein_assoc, has_morphogen, has_vein):
+    def __init__(self, pos, is_cp, vein_assoc, has_morphogen, has_vein, neighbours=[None, None]):
         self.pos = pos
         self.is_cp = is_cp
         self.vein_assoc = vein_assoc
         self.has_morphogen = has_morphogen
         self.has_vein = has_vein
+        self.neighbours = neighbours
 
     def __repr__(self):
         return repr((self.pos))
@@ -33,6 +35,7 @@ class Point:
     def print_point(self):
         """prints out the class attributes into a string"""
         print(f"pos: {self.pos} is_cp: {self.is_cp} vein_assoc: {self.vein_assoc} has_morphogen: {self.has_morphogen}")
+
 
 class PointCollection:
     def __init__(self, points, start_point, end_point):
@@ -79,6 +82,7 @@ class PointCollection:
         self.start_point = self.points[0]
         self.end_point = self.points[-1]
 
+
 class Vein(PointCollection):
     def __init__(self, points, start_point, end_point):
         super().__init__(points, start_point, end_point)
@@ -109,8 +113,35 @@ class Margin(PointCollection):
             y_pos.append(point.pos[1])
         return x_pos, y_pos, pos
 
+    def add_neighbours(self, new_pts, pt_left=None, pt_right=None, is_interpolation=False):
+        # add multiple interpolated points or single pt
+        if is_interpolation:
+            prev_pt = pt_left
+            margin_index = self.points.index(prev_pt)
+            for i in range(len(new_pts)):
+                if i < len(new_pts) - 1:
+                    new_pts[i].neighbours = [prev_pt, new_pts[i + 1]]
+                    prev_pt = new_pts[i]
+                else:
+                    new_pts[i].neighbours = [prev_pt, pt_right]
+                # update neighbours in margin
+                self.points[margin_index].neighbours[1] = [new_pts[i]]
+                # print(f"margin_index: {margin_index} len(new_pts): {len(new_pts)}, len(points): {len(self.points)}")
+                # print(f"self.points[margin_index+1]: {self.points[margin_index+1]}")
+                if not margin_index + 1 == len(self.points):
+                    self.points[margin_index + 1].neighbours[0] = [new_pts[i]]
+                # insert new point
+                self.points.insert(margin_index + 1, new_pts[i])
+        if not is_interpolation:
+            for new_pt in new_pts:
+                margin_index = self.points.index(new_pt.neighbours[0])
+                self.points[margin_index].neighbours[1] = [new_pt]
+                self.points[margin_index + 1].neighbours[0] = [new_pt]
+                self.points.insert(margin_index + 1, new_pt)
+
     def insert_point(self, point_to_add):
-        """Adds a new point to the margin, sorting it and resetting the endpoints."""
+        """ DEPRECATED : DO NOT USE except for initialization!
+        Adds a new point to the margin, sorting it and resetting the endpoints."""
         m_neg = []
         m_pos = []
         m_0 = []
@@ -132,7 +163,7 @@ class Margin(PointCollection):
 
         # sort sides individually
         m_neg = sorted(m_neg, key=cmp_to_key(Point.comparator))
-        m_pos = sorted(m_pos, key=cmp_to_key(Point.comparator), reverse=True) #sort top to bottom
+        m_pos = sorted(m_pos, key=cmp_to_key(Point.comparator), reverse=True)  # sort top to bottom
         m_0 = sorted(m_0, key=cmp_to_key(Point.comparator))
         # print(f"m_neg {m_neg}, m_pos {m_pos}, m_0 {m_0}")
 
@@ -182,7 +213,7 @@ class Leaf:
         cp_amount = len(self.margin.all_cp)
         # print(f", cp_amount: {cp_amount}")
         prev_i = 0
-        for i in range(0, len(cp_index)+1):
+        for i in range(0, len(cp_index) + 1):
             # print(f"cp_i : {i}")
             if i >= len(cp_index):
                 end_segment_pts = self.margin.points[prev_i:]
@@ -190,8 +221,8 @@ class Leaf:
                 end_segment = self.Segment(end_segment_pts, [prev_i, 0], cp_amount)
                 segments.append(end_segment)
             else:
-                segment_pts = self.margin.points[prev_i:cp_index[i]+1]
-                segment = self.Segment(segment_pts, [prev_i, cp_index[i]+1], cp_amount)
+                segment_pts = self.margin.points[prev_i:cp_index[i] + 1]
+                segment = self.Segment(segment_pts, [prev_i, cp_index[i] + 1], cp_amount)
                 segments.append(segment)
                 prev_i = cp_index[i]
 
@@ -231,7 +262,8 @@ class Leaf:
             self.all_pts_pos = self.get_all_pts_pos()
 
         def __repr__(self):
-            return repr((self.margin_pts_segment, self.cp_amount, self.vein_segment, self.vein_segment, self.all_pts_pos))
+            return repr(
+                (self.margin_pts_segment, self.cp_amount, self.vein_segment, self.vein_segment, self.all_pts_pos))
 
         # helper function
         def find_intersection(self, left_vein, right_vein):
@@ -347,4 +379,3 @@ class Leaf:
                     pos.append(vein_pt)
 
             return pos
-
