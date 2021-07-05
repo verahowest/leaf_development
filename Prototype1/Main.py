@@ -27,7 +27,12 @@ def main():
         # modification of morphogen distribution
         leaf.define_segments()
         # introducing new cp's after margin growth
-        introduce_new_cp(leaf, CP_TH, INTERPOLATION, KV)
+        introduce_new_cp(leaf, CP_TH, KV)
+        # print("printing anchor pts...")
+        # leaf.print_all_anchor_pts()
+        print(f"len of all_veins: {len(leaf.all_veins)}")
+        for vein in leaf.all_veins:
+            print(f"len of anchor_pts: {vein.anchor_pts} {vein.start_point} {vein.end_point}")
 
         # plot leaf
         vis.plot_leaf_segments(leaf, PLT_DIM, LEAF_PATH, BASE_NAME, i)

@@ -3,7 +3,7 @@ from sklearn.metrics.pairwise import euclidean_distances
 from math import tan
 from scipy.interpolate import interp1d
 from leafstructure import Point, Vein, Margin, Leaf
-
+from matplotlib.cbook import flatten
 
 # HELPER FUNCTIONS
 
@@ -208,7 +208,7 @@ def insert_cp_pos(segment, dist_array, dist_sum):
     return pos, left_pt, right_pt
 
 
-def introduce_new_cp(leaf, cp_th, interpolation, kv):
+def introduce_new_cp(leaf, cp_th, kv):
     """Introduces new cp where the boundary distance exceeds a certain distance threshold"""
 
     def create_vein():
@@ -216,25 +216,12 @@ def introduce_new_cp(leaf, cp_th, interpolation, kv):
         km = 1
         theta = np.arccos(kv / km)
         # create new vein
-        anchor_pt = find_closest_anchor(new_cp, segment.vein_segment, theta)
-        new_vein = Vein([anchor_pt, new_cp], anchor_pt, new_cp)
-        print(f"new_vein:, {new_vein}")
+        anchor_pt = find_closest_anchor(leaf, new_cp, segment.vein_segment, theta)
+        new_vein = Vein([anchor_pt, new_cp], anchor_pt, new_cp, anchor_pts=[])
         # add vein to vein assoc
         anchor_pt.has_vein = 1
         new_cp.connect_to_new_vein(new_vein)
         new_cp.has_vein = 1
-        # add the anchor point to its intersecting vein
-        # print(f"len(leaf.all_veins): {len(leaf.all_veins)}")
-        for vein in leaf.all_veins:
-            # print(f"vein: {vein}")
-            # euc_res = euclidean_distances(all_cp_pos, [cp.pos])
-            proj = vector_projection(vein.start_point.pos, vein.end_point.pos, anchor_pt.pos)
-            # print(f"proj: {proj}, anchor_pt.pos {anchor_pt.pos}")
-            is_on_line = np.array_equal(proj,anchor_pt.pos)
-            print(f"is on line: {is_on_line}")
-            if is_on_line:
-                vein.anchor_pts.append(anchor_pt)
-                break
         # add vein to leaf
         leaf.add_vein(new_vein)
         return new_vein, new_cp
@@ -245,7 +232,6 @@ def introduce_new_cp(leaf, cp_th, interpolation, kv):
         dist_array, dist_sum = calculate_margin_distance(segment.margin_pts_segment)
         if cp_th < dist_sum:
             new_cp_pos, left_pt, right_pt = insert_cp_pos(segment, dist_array, dist_sum)
-            print(f"new_cp_pos :{new_cp_pos}")
             new_cp = Point(new_cp_pos, 1, [leaf.primordium_vein], 0, 0, [left_pt, right_pt])
             added_vein, new_cp = create_vein()
             leaf.margin.add_neighbours([new_cp])
@@ -254,7 +240,7 @@ def introduce_new_cp(leaf, cp_th, interpolation, kv):
     return leaf
 
 
-def find_closest_anchor(cp, vein_segment, theta):
+def find_closest_anchor(leaf, cp, vein_segment, theta):
     """Given a vein segment this functions find the shortest anchor point with angle theta to create a vein"""
 
     def find_closest_point(projection, vein, proj_min, mag_min, vein_min):
@@ -279,9 +265,16 @@ def find_closest_anchor(cp, vein_segment, theta):
             proj_min, mag_min, vein_min = find_closest_point(projection, vein, proj_min, mag_min, vein_min)
         offset_dir = normalize_vec(vein_min)
         offset = mag_min / tan(theta)
-        anchor_pos = proj_min + offset_dir * offset
-    anchor_pt = Point(anchor_pos, 0, cp.vein_assoc, 0, 0)
-    print(f"anchor point vein_assoc: {anchor_pt.vein_assoc}")
+        anchor_pos = (proj_min + offset_dir * offset)
+    anchor_pt, is_new = leaf.find_anchor_pt(anchor_pos, cp.vein_assoc)
+    if is_new:
+        for vein in leaf.all_veins:
+            if not np.allclose(vein.start_point.pos, anchor_pos) or np.allclose(vein.end_point.pos, anchor_pos):
+                proj = vector_projection(vein.start_point.pos, vein.end_point.pos, anchor_pt.pos)
+                is_on_line = np.allclose(proj, anchor_pt.pos)
+                if is_on_line:
+                    vein.anchor_pts.append(anchor_pt)
+                    break
     return anchor_pt
 
 
