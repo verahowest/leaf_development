@@ -26,6 +26,10 @@ def main():
         expand_veins(leaf, GR, GD, INTERPOLATION, CP_TH)
         # modification of morphogen distribution
         leaf.define_segments()
+        s = 0
+        for segment in leaf.segments:
+            print(f"segments {s}: {segment.vein_segment}")
+            s += 1
         # introducing new cp's after margin growth
         introduce_new_cp(leaf, CP_TH, KV)
         # print("printing anchor pts...")

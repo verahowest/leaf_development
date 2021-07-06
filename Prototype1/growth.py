@@ -15,8 +15,8 @@ def normalize_vec(vec):
 
 def coord_to_vec(start_pos, end_pos):
     """takes two coordinate lists and converts them into a 2D vector"""
-    a = start_pos[0]
-    b = start_pos[1]
+    # a = start_pos[0]
+    # b = start_pos[1]
     vec = np.array(start_pos) - np.array(end_pos)
     return vec
 
@@ -121,10 +121,7 @@ def calculate_gr(dist, dir, gr, cp_th):
     fit_range = [-cp_th / 2, cp_th / 2]
 
     temp_growth = (gr * normalize_to_range(dir, old_range, fit_range)) / dist
-    # temp_growth = (gr * dir) / dist
-    # print(f"dist { dist} temp_growth: {temp_growth}")
     temp_growth = temp_growth
-    # print(f"dir_growth { dir_growth} temp_growth: {temp_growth}")
     return temp_growth
 
 
@@ -134,7 +131,6 @@ def expand_veins(leaf, gr, gd, interpolation, cp_th):
     init_cp_indicators(leaf, interpolation)
     segments = leaf.define_segments()
     gr_total = np.zeros((len(leaf.margin.points), 2))
-    anchors = []
     prim_vein_dir = normalize_vec(leaf.primordium_vein.get_vector())
     prev_vein_dir = 0 * prim_vein_dir
     # calculate directional growth
@@ -164,9 +160,8 @@ def expand_veins(leaf, gr, gd, interpolation, cp_th):
             cp_i = (s.margin_slices[1]) - 1
             growth = np.multiply(next_vein_dir, gr)
             gr_total[cp_i] = growth
-            # TODO! check anchor points!!!!!
-            anchor_pts = leaf.margin.points[cp_i].vein_assoc[-1].anchor_pts
-            anchors.append([anchor_pts, growth])
+            # anchor_pts = leaf.margin.points[cp_i].vein_assoc[-1].anchor_pts
+            # anchor_gr.append([anchor_pts, growth])
             # add non cp growth rates
             gr_total[(s.margin_slices[0] + 1):(s.margin_slices[1] - 1)] = temp_next + temp_prev
         else:
@@ -213,12 +208,11 @@ def introduce_new_cp(leaf, cp_th, kv):
 
     def create_vein():
         """Connects unconnected Cp's with vein and adds new vein to leaf."""
+        # find anchor point
         km = 1
         theta = np.arccos(kv / km)
-        # create new vein
         anchor_pt = find_closest_anchor(leaf, new_cp, segment.vein_segment, theta)
         new_vein = Vein([anchor_pt, new_cp], anchor_pt, new_cp, anchor_pts=[])
-        # add vein to vein assoc
         anchor_pt.has_vein = 1
         new_cp.connect_to_new_vein(new_vein)
         new_cp.has_vein = 1
@@ -260,8 +254,8 @@ def find_closest_anchor(leaf, cp, vein_segment, theta):
         vein_min = []
         # find the shortest connection between all the vein projections
         for vein_part in vein_segment:
-            vein = coord_to_vec(vein_part[0], vein_part[1])
-            projection = vector_projection(vein_part[0], vein_part[1], cp.pos)
+            vein = coord_to_vec(vein_part[0].pos, vein_part[1].pos)
+            projection = vector_projection(vein_part[0].pos, vein_part[1].pos, cp.pos)
             proj_min, mag_min, vein_min = find_closest_point(projection, vein, proj_min, mag_min, vein_min)
         offset_dir = normalize_vec(vein_min)
         offset = mag_min / tan(theta)
@@ -270,12 +264,14 @@ def find_closest_anchor(leaf, cp, vein_segment, theta):
     if is_new:
         for vein in leaf.all_veins:
             if not np.allclose(vein.start_point.pos, anchor_pos) or np.allclose(vein.end_point.pos, anchor_pos):
-                proj = vector_projection(vein.start_point.pos, vein.end_point.pos, anchor_pt.pos)
-                is_on_line = np.allclose(proj, anchor_pt.pos)
-                if is_on_line:
-                    vein.anchor_pts.append(anchor_pt)
-                    break
+                for part in vein.define_parts():
+                    proj = vector_projection(part[0].pos, part[1].pos, anchor_pt.pos)
+                    is_on_line = np.allclose(proj, anchor_pt.pos)
+                    if is_on_line:
+                        vein.anchor_pts.append(anchor_pt)
+                        break
     return anchor_pt
 
+# TODO! add the vein segments like in the plot!
 
 

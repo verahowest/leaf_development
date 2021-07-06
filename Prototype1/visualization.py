@@ -58,17 +58,35 @@ def plot_leaf_segments(leaf, dim, path, name, step):  # base_point, all_veins, m
 
     # plot veins
     for i in range(len(leaf.all_veins)):
-        vein = leaf.all_veins[i]
-        x = [vein.end_point.pos[0], vein.start_point.pos[0]]
-        y = [vein.end_point.pos[1], vein.start_point.pos[1]]
-        plt.plot(x, y, '-bo')
+        plot_parts(leaf.all_veins[i])
+        # vein = leaf.all_veins[i]
+        # x = [vein.end_point.pos[0], vein.start_point.pos[0]]
+        # y = [vein.end_point.pos[1], vein.start_point.pos[1]]
+        # plt.plot(x, y, '-bo')
 
     # plot cp points
     x_cp, y_cp, pos_cp = leaf.margin.get_cp_pos()
     plt.plot(x_cp, y_cp, 'yo')
 
     plt.axis([-dim, dim, -dim/4, dim*2 -dim/4 ])
-    plt.savefig(path + name + "_segments_"+ str(step) + ".png", format="PNG")
+    plt.savefig(path + name + "_segments_" + str(step) + ".png", format="PNG")
     plt.clf()
 
     # plt.show()
+
+def plot_parts(vein):
+    """plot the veins leading from anchor point to anchor point"""
+    if len(vein.anchor_pts) == 0:
+        x = [vein.end_point.pos[0], vein.start_point.pos[0]]
+        y = [vein.end_point.pos[1], vein.start_point.pos[1]]
+        plt.plot(x, y, '-bo')
+    else:
+        start = vein.start_point.pos
+        for anchor in vein.anchor_pts:
+            x = [anchor.pos[0], start[0]]
+            y = [anchor.pos[1], start[1]]
+            plt.plot(x, y, '-bo')
+            start = anchor.pos
+        x = [vein.end_point.pos[0], start[0]]
+        y = [vein.end_point.pos[1], start[1]]
+        plt.plot(x, y, '-bo')
