@@ -4,7 +4,7 @@ from growth import *
 import export as export
 
 STEPS = 30  # simulation steps
-PLT_DIM = 10
+PLT_DIM = 5
 INTERPOLATION = 1  # number of points to interpolate between margin points (min 1)
 GR = 0.2  # growth rate
 GD = 0.2  # directional growth
@@ -21,17 +21,27 @@ def main():
     leaf = initialize_default_leaf()
     vis.plot_leaf_segments(leaf, PLT_DIM, LEAF_PATH, BASE_NAME, 0)
     for i in range(1, (STEPS + 1)):
+        print(f"----------------------------")
         print(f"----------STEP {i}----------")
+        print(f"----------------------------")
+
         # growstep driven by expansion of veins
         expand_veins(leaf, GR, GD, INTERPOLATION, CP_TH)
         # modification of morphogen distribution
-        leaf.define_segments()
+        # print(f"----------->before cp addition.")
+        # leaf.define_segments()
+        # s = 0
+        # for segment in leaf.segments:
+        #     print(f"segments {s}: {segment.vein_segment}")
+        #     s += 1
+        # introducing new cp's after margin growth
+        introduce_new_cp(leaf, CP_TH, KV)
+        print(f"--------------------->>>after cp addition.")
+        # leaf.define_segments()
         s = 0
         for segment in leaf.segments:
             print(f"segments {s}: {segment.vein_segment}")
             s += 1
-        # introducing new cp's after margin growth
-        introduce_new_cp(leaf, CP_TH, KV)
         # print("printing anchor pts...")
         # leaf.print_all_anchor_pts()
         print(f"len of all_veins: {len(leaf.all_veins)}")

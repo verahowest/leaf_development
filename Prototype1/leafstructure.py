@@ -2,6 +2,7 @@ from operator import itemgetter, attrgetter
 from functools import cmp_to_key
 import numpy as np
 import math
+import itertools
 from collections import OrderedDict
 
 
@@ -239,10 +240,23 @@ class Leaf:
         for vein in self.all_veins:
             for anchor_pt in vein.anchor_pts:
                 if np.allclose(anchor_pt.pos, new_pos):
-                    return anchor_pt, False
+                    return anchor_pt, new_vein_assoc.append(vein), False
         # no anchor point was found at that position
         anchor_pt = Point(new_pos, 0, new_vein_assoc, 0, 0)
-        return anchor_pt, True
+        return anchor_pt, new_vein_assoc, True
+
+    def find_vein_for_part(self, vein_part):
+        """When given a part between two anchor points  it finds which vein it is"""
+        pt_a = vein_part[0]
+        pt_b = vein_part[1]
+        for vein in self.all_veins:
+            search_points = vein.anchor_pts.copy()
+            search_points.append(vein.start_point)
+            search_points.append(vein.end_point)
+            print(f"search_points: {search_points}")
+            if pt_a in search_points and pt_b in search_points:
+                print("found vein_part in vein")
+                return vein
 
     def define_segments(self):
         """Defines segments as a collection of margin segments
@@ -297,7 +311,6 @@ class Leaf:
             self.margin_pts_segment = margin_pts_segment
             self.margin_slices = margin_slices
             self.cp_amount = cp_amount
-            # TODO! rewrite surrounding_veins to include anchor pts for secundary veins
             # self.vein_segment = self.find_surrounding_veins()
             self.vein_segment = self.find_surrounding_veins_2()
             self.all_pts_pos = self.get_all_pts_pos()
@@ -350,67 +363,170 @@ class Leaf:
         #         middle_seg = [left_vein[0].pos, right_vein[0].pos]
         #         return [left_seg, middle_seg, right_seg]
 
+        @staticmethod
+        def check_if_intersecting(l_vein_in, r_vein_in, ass_index):
+            if ass_index <= len(l_vein_in):
+                l_vein = l_vein_in[-ass_index]
+            else:
+                l_vein = l_vein_in[0]
+            if ass_index <= len(r_vein_in):
+                r_vein = r_vein_in[-ass_index]
+            else:
+                r_vein = r_vein_in[0]
+
+            is_inters = False
+            inters = None
+            # check if start left vein is somewhere on the right vein
+            if (l_vein.start_point in r_vein.anchor_pts) or (l_vein.start_point in r_vein.points):
+                is_inters = True
+                inters = l_vein.start_point
+            # check if the left anchor points are somewhere on the right vein
+            else:
+                if len(l_vein.anchor_pts) > 0:
+                    for anchor_pt in l_vein.anchor_pts:
+                        is_inters = (anchor_pt in r_vein.anchor_pts) or (anchor_pt in r_vein.points)
+                        if is_inters:
+                            inters = anchor_pt
+                            break
+            return is_inters, inters
+
+        @staticmethod
+        def add_to_vein_seg(l_vein, r_vein, vein_seg, inters_pt):
+            """if these parts are intersecting, add all the vein segments up to the intersection"""
+            l_connected = False
+            i = 1
+            while not l_connected:
+                # exception for the primordium vein
+                if np.allclose(np.array(l_vein[0][0].pos), np.array([0, 0])) and r_vein[-1][1].pos[0] < 0:
+                    # print("pos is 0,0")
+                    l_part = l_vein[0]
+                else:
+                    l_part = l_vein[-i]
+                # print(f"--?l_part {l_part} inters_pt: {inters_pt}")
+                if l_part not in vein_seg:
+                    vein_seg.append(l_part)
+                # if it contains the intersection stop
+                if inters_pt in l_part:
+                    # print("l_connected")
+                    l_connected = True
+                i = i + 1
+            r_connected = False
+            i = 1
+            while not r_connected:
+                # exception for the primordium vein
+                if np.allclose(np.array(r_vein[0][0].pos), np.array([0, 0])) and l_vein[-1][1].pos[0] > 0:
+                    # print("pos is 0,0")
+                    r_part = r_vein[0]
+                else:
+                    r_part = r_vein[-i]
+                # print(f"--?r_part {r_part} inters_pt: {inters_pt}")
+                if r_part not in vein_seg:
+                    vein_seg.append(r_part)
+                # if it starts in the intersection stop
+                if inters_pt in r_part:
+                    # print("r_connected")
+                    r_connected = True
+                i = i + 1
+            if l_connected and r_connected:
+                return vein_seg
+
+        @staticmethod
+        def cut_vein_assoc(left_part, left_cut, right_part, right_cut):
+            # TODO! primordium exception
+            i = 0
+            for part in left_part:
+                i += 1
+                print(f"{left_cut}, {np.array(part[1])}")
+                if left_cut == part[1] :
+                    break
+            left_part = left_part[i::]
+
+            j = 0
+            for part in right_part:
+                j += 1
+                if right_cut==part[1]:
+                    break
+            right_part = right_part[:j]
+            print(f"i: {i} j: {j}")
+
+            return left_part, right_part
+
         def find_surrounding_veins_2(self):
-            # TODO! fix that it adds the end of the primordium vein extra!!!
             """Given a margin segment of points with their two surrounding cp's,
             this function finds the veins that surround that segment."""
-
-            def check_if_intersecting(l_vein, r_vein):
-                # check if start left vein is somewhere on the right vein
-                if (l_vein.start_point in r_vein.anchor_pts) or (l_vein.start_point in r_vein.points):
-                    is_inters = True
-                    inters = l_vein.start_point
-                # check if the left anchor points are somewhere on the right vein
-                else:
-                    if len(l_vein.anchor_pts) > 0:
-                        for anchor_pt in l_vein.anchor_pts:
-                            is_inters = (anchor_pt in r_vein.anchor_pts) or (anchor_pt in r_vein.points)
-                            if is_inters:
-                                inters = anchor_pt
-                                break
-                    else:
-                        is_inters = False
-                        inters = None
-                return is_inters, inters
-
-            def add_to_vein_seg(l_part, r_part, vein_seg, inters_pt):
-                """if these parts are intersecting, add all the vein segments up to the intersection"""
-                l_connected = False
-                i = 1
-                while not l_connected:
-                    vein_seg.append(l_part[-i])
-                    # if it starts in the intersection stop
-                    if l_part[-i][0] == inters_pt:
-                        l_connected = True
-                    i = i + 1
-                r_connected = False
-                i = 1
-                while not r_connected:
-                    if r_part[-i] not in vein_seg:
-                        vein_seg.append(r_part[-i])
-                    # if it starts in the intersection stop
-                    if r_part[-i][0] == inters_pt:
-                        r_connected = True
-                    i = i + 1
-                if l_connected and r_connected:
-                    return vein_seg
 
             # find surrounding veins of cp
             assoc_left = self.margin_pts_segment[0].vein_assoc
             assoc_right = self.margin_pts_segment[-1].vein_assoc
+            print(f"len(assoc_left): {len(assoc_left)}, len(assoc_right): {len(assoc_right)}")
             vein_segment = []
             assoc = 1
-            is_intersecting, intersection = check_if_intersecting(assoc_left[-assoc], assoc_right[-assoc])
+            is_intersecting, intersection = self.check_if_intersecting(assoc_left, assoc_right, assoc)
+            print(f"is_intersecting: {is_intersecting} intersection: {intersection}")
             while not is_intersecting:
-                vein_segment.append(assoc_left[-assoc].define_parts())
-                vein_segment.append(assoc_right[-assoc].define_parts())
+                temp_left = assoc_left[-assoc].define_parts()
+                left_cut = temp_left[0][0]
+                temp_right = assoc_right[-assoc].define_parts()
+                right_cut = temp_right[0][0]
+                print(f"temp_left {temp_left}, left_cut: {left_cut}")
+                print(f"temp_right {temp_right}, right_cut: {right_cut}")
+
+                # this is new
+                if assoc < len(assoc_left):
+                    vein_segment.append(temp_left)
+                if assoc < len(assoc_right):
+                    vein_segment.append(temp_right)
+                # vein_segment.append(temp_left)
+                # vein_segment.append(temp_right)
+                print(f"vein_segment while not intersecting: {vein_segment}")
                 assoc += 1
-                is_intersecting, intersection = check_if_intersecting(assoc_left[-assoc], assoc_right[-assoc])
+                is_intersecting, intersection = self.check_if_intersecting(assoc_left, assoc_right, assoc)
+                print(f"is_intersecting: {is_intersecting} intersection: {intersection}")
+
             if is_intersecting:
-                left_part = assoc_left[-assoc].define_parts()
-                right_part = assoc_right[-assoc].define_parts()
-                vein_segment = add_to_vein_seg(left_part, right_part, vein_segment, intersection)
-                # print(f"final vein segment: {vein_segment}")
+                if assoc > 1:
+                    if assoc <= len(assoc_left):
+                        left_part = assoc_left[-assoc]
+                    else:
+                        left_part = assoc_left[0]
+                    if assoc <= len(assoc_right):
+                        right_part = assoc_right[-assoc]
+                    else:
+                        right_part = assoc_right[0]
+
+                    left_part = left_part.define_parts()
+                    right_part = right_part.define_parts()
+                    print(f"<<<<<<before cutting")
+                    print(f"left_part: {left_part}")
+                    print(f"right_part: {right_part}")
+
+                    if left_part == right_part:
+                        # TODO! update alll ditt
+                        i = 0
+                        cut = []
+                        print(f"left_cut: {left_cut}, right_cut: {right_cut}")
+                        for part in left_part:
+                            i += 1
+                            print(f"left_cut: {left_cut}, part[1]: {np.array(part[1])}")
+                            if left_cut == part[1] or right_cut == part[1]:
+                                cut.append(i)
+                        middle_part = left_part[cut[0]:cut[1]]
+                        print(f"middle_part: {middle_part}")
+                        vein_segment.append(middle_part)
+
+                    else:
+                        # left_part, right_cut_part = self.cut_vein_assoc(left_part, left_cut, right_part, right_cut)
+                        # intersection = left_cut
+                        vein_segment = self.add_to_vein_seg(left_part, right_part, vein_segment, intersection)
+
+                else:
+                    left_part = assoc_left[-assoc].define_parts()
+                    right_part = assoc_right[-assoc].define_parts()
+                    vein_segment = self.add_to_vein_seg(left_part, right_part, vein_segment, intersection)
+                print(f"left_part: {left_part}")
+                print(f"right_part: {right_part}")
+
+                print(f"FINAL VEIN SEGMENT: {vein_segment}")
                 return vein_segment
             # case left vein and right vein don't connect -> recursion (maybe this isn't necessary yet)
 
@@ -446,11 +562,15 @@ class Leaf:
 
             pos = []
             for pt in self.margin_pts_segment:
-                pos.append(pt.pos)
+                pos.append(np.array(pt.pos).astype(float))
             for vein_seg in self.vein_segment:
-                # print(f"vein_seg {vein_seg}")
                 for vein_pt in vein_seg:
-                    pos.append(vein_pt.pos)
+                    if isinstance(vein_pt, list):
+                        for pt in vein_pt:
+                            pos.append(np.array(pt.pos).astype(float))
+                    else:
+                        pos.append(np.array(vein_pt.pos).astype(float))
+
 
             return pos
 

@@ -49,20 +49,13 @@ def plot_leaf_segments(leaf, dim, path, name, step):  # base_point, all_veins, m
 
     # plot margin segments
     for segment in leaf.segments:
-        # print(f"amount of segments: {len(leaf.segments)}, len of seg: {len(segment.all_pts_pos)}")
-        # print(segment.all_pts_pos)
         pts = np.array(segment.all_pts_pos)
         hull = ConvexHull(pts)
-
         plt.fill(pts[hull.vertices, 0], pts[hull.vertices, 1], color=np.random.rand(3, ), alpha=0.5)
 
     # plot veins
     for i in range(len(leaf.all_veins)):
         plot_parts(leaf.all_veins[i])
-        # vein = leaf.all_veins[i]
-        # x = [vein.end_point.pos[0], vein.start_point.pos[0]]
-        # y = [vein.end_point.pos[1], vein.start_point.pos[1]]
-        # plt.plot(x, y, '-bo')
 
     # plot cp points
     x_cp, y_cp, pos_cp = leaf.margin.get_cp_pos()

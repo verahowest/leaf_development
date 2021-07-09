@@ -130,6 +130,7 @@ def expand_veins(leaf, gr, gd, interpolation, cp_th):
     # initialize growth and interpolate margin where necessary
     init_cp_indicators(leaf, interpolation)
     segments = leaf.define_segments()
+    print("--------------DONE WITH LEAF DEFINE SEGMENTS: expand_veins-----------")
     gr_total = np.zeros((len(leaf.margin.points), 2))
     prim_vein_dir = normalize_vec(leaf.primordium_vein.get_vector())
     prev_vein_dir = 0 * prim_vein_dir
@@ -217,9 +218,12 @@ def introduce_new_cp(leaf, cp_th, kv):
         new_cp.connect_to_new_vein(new_vein)
         new_cp.has_vein = 1
         # add vein to leaf
-        leaf.add_vein(new_vein)
+        print(f"++++++++++++++++ADDING VEIN: {new_vein}")
+        print(f"new_cp.vein_assoc: {new_cp.vein_assoc}")
+        leaf.add_vein(new_vein, False)
         return new_vein, new_cp
 
+    print("------BEFORE CP------")
     segments = leaf.define_segments()
     for segment in segments:
         # insert new cp if it exceeds the margin
@@ -228,8 +232,10 @@ def introduce_new_cp(leaf, cp_th, kv):
             new_cp_pos, left_pt, right_pt = insert_cp_pos(segment, dist_array, dist_sum)
             new_cp = Point(new_cp_pos, 1, [leaf.primordium_vein], 0, 0, [left_pt, right_pt])
             added_vein, new_cp = create_vein()
+            print(f"print vein assoc new_cp {new_cp.vein_assoc}")
             leaf.margin.add_neighbours([new_cp])
             leaf.margin.check_conv_points()
+    print("------AFTER CP------")
     leaf.define_segments()
     return leaf
 
@@ -237,14 +243,15 @@ def introduce_new_cp(leaf, cp_th, kv):
 def find_closest_anchor(leaf, cp, vein_segment, theta):
     """Given a vein segment this functions find the shortest anchor point with angle theta to create a vein"""
 
-    def find_closest_point(projection, vein, proj_min, mag_min, vein_min):
+    def find_closest_point(projection, vein_vec, proj_min, mag_min, vein_min, curr_vein_part, part_min):
         """Compare s the magnitude of the cp projection on the vein segments. Returning the min projection."""
         orthogonal_side = get_magnitude(projection - np.array(cp.pos))
         if mag_min == 0 or mag_min >= orthogonal_side:
             mag_min = orthogonal_side
             proj_min = projection
-            vein_min = vein
-        return proj_min, mag_min, vein_min
+            vein_min = vein_vec
+            part_min = curr_vein_part
+        return proj_min, mag_min, vein_min, part_min
 
     if theta == 0:
         anchor_pos = vein_segment[0][0]
@@ -252,15 +259,29 @@ def find_closest_anchor(leaf, cp, vein_segment, theta):
         proj_min = []
         mag_min = 0
         vein_min = []
+        vein_part_min = None
         # find the shortest connection between all the vein projections
         for vein_part in vein_segment:
+            print(f"vein_part: {vein_part}")
             vein = coord_to_vec(vein_part[0].pos, vein_part[1].pos)
             projection = vector_projection(vein_part[0].pos, vein_part[1].pos, cp.pos)
-            proj_min, mag_min, vein_min = find_closest_point(projection, vein, proj_min, mag_min, vein_min)
+            proj_min, mag_min, vein_min, vein_part_min = find_closest_point(projection, vein, proj_min, mag_min, vein_min, vein_part, vein_part_min)
+        print(f"vein_part_min: {vein_part_min}")
         offset_dir = normalize_vec(vein_min)
         offset = mag_min / tan(theta)
         anchor_pos = (proj_min + offset_dir * offset)
-    anchor_pt, is_new = leaf.find_anchor_pt(anchor_pos, cp.vein_assoc)
+
+        # fix new vein_assoc
+        anchor_vein = leaf.find_vein_for_part(vein_part_min)
+        print(f"anchor_vein {anchor_vein}")
+        # new_vein_assoc = cp.vein_assoc.copy()
+        # if anchor_vein not in new_vein_assoc:
+        #     new_vein_assoc.append(anchor_vein)
+        if anchor_vein not in cp.vein_assoc:
+            cp.vein_assoc.append(anchor_vein)
+
+        # print(f"new_vein_assoc: {new_vein_assoc}")
+    anchor_pt, new_vein_assoc, is_new = leaf.find_anchor_pt(anchor_pos, cp.vein_assoc)
     if is_new:
         for vein in leaf.all_veins:
             if not np.allclose(vein.start_point.pos, anchor_pos) or np.allclose(vein.end_point.pos, anchor_pos):
