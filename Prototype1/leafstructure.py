@@ -436,11 +436,9 @@ class Leaf:
             i = 0
             for part in left_part:
                 i += 1
-                print(f"{left_cut}, {np.array(part[1])}")
-                if left_cut == part[1] :
+                if left_cut == part[0]:
                     break
-            left_part = left_part[i::]
-
+            left_part = left_part[i-1::]
             j = 0
             for part in right_part:
                 j += 1
@@ -468,8 +466,8 @@ class Leaf:
                 left_cut = temp_left[0][0]
                 temp_right = assoc_right[-assoc].define_parts()
                 right_cut = temp_right[0][0]
-                print(f"temp_left {temp_left}, left_cut: {left_cut}")
-                print(f"temp_right {temp_right}, right_cut: {right_cut}")
+                # print(f"temp_left {temp_left}, left_cut: {left_cut}")
+                # print(f"temp_right {temp_right}, right_cut: {right_cut}")
 
                 # this is new
                 if assoc < len(assoc_left):
@@ -496,7 +494,7 @@ class Leaf:
 
                     left_part = left_part.define_parts()
                     right_part = right_part.define_parts()
-                    print(f"<<<<<<before cutting")
+                    print(f"<<<<<<intersection for assoc > 1")
                     print(f"left_part: {left_part}")
                     print(f"right_part: {right_part}")
 
@@ -504,29 +502,33 @@ class Leaf:
                         # TODO! update alll ditt
                         i = 0
                         cut = []
-                        print(f"left_cut: {left_cut}, right_cut: {right_cut}")
+                        # print(f"left_cut: {left_cut}, right_cut: {right_cut}")
                         for part in left_part:
                             i += 1
-                            print(f"left_cut: {left_cut}, part[1]: {np.array(part[1])}")
+                            # print(f"left_cut: {left_cut}, part[1]: {np.array(part[1])}")
                             if left_cut == part[1] or right_cut == part[1]:
                                 cut.append(i)
                         middle_part = left_part[cut[0]:cut[1]]
-                        print(f"middle_part: {middle_part}")
+                        # print(f"middle_part: {middle_part}")
                         vein_segment.append(middle_part)
 
                     else:
-                        # left_part, right_cut_part = self.cut_vein_assoc(left_part, left_cut, right_part, right_cut)
+                        print(f"left_cut: {left_cut}, right_cut: {right_cut}")
+                        left_part, right_part = self.cut_vein_assoc(left_part, left_cut, right_part, right_cut)
+                        print(f"-> the cut left_part: {left_part}")
+                        print(f"-> the cut right_part: {right_part}")
                         # intersection = left_cut
+
                         vein_segment = self.add_to_vein_seg(left_part, right_part, vein_segment, intersection)
 
                 else:
                     left_part = assoc_left[-assoc].define_parts()
                     right_part = assoc_right[-assoc].define_parts()
                     vein_segment = self.add_to_vein_seg(left_part, right_part, vein_segment, intersection)
-                print(f"left_part: {left_part}")
-                print(f"right_part: {right_part}")
+                # print(f"left_part: {left_part}")
+                # print(f"right_part: {right_part}")
 
-                print(f"FINAL VEIN SEGMENT: {vein_segment}")
+                print(f"????FINAL VEIN SEGMENT: {vein_segment}")
                 return vein_segment
             # case left vein and right vein don't connect -> recursion (maybe this isn't necessary yet)
 
