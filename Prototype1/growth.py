@@ -161,14 +161,13 @@ def expand_veins(leaf, gr, gd, interpolation, cp_th):
             cp_i = (s.margin_slices[1]) - 1
             growth = np.multiply(next_vein_dir, gr)
             gr_total[cp_i] = growth
-            # anchor_pts = leaf.margin.points[cp_i].vein_assoc[-1].anchor_pts
-            # anchor_gr.append([anchor_pts, growth])
             # add non cp growth rates
             gr_total[(s.margin_slices[0] + 1):(s.margin_slices[1] - 1)] = temp_next + temp_prev
         else:
             gr_total[(s.margin_slices[0] + 1):] = temp_next + temp_prev
-            # print(f"gr_total: {gr_total}")
             gr_total = gr_total + dir_growth
+            # keep base_point 0
+            gr_total[0] = [0, 0]
             leaf.grow(gr_total)
             return leaf
         prev_vein_dir = next_vein_dir
@@ -263,6 +262,10 @@ def find_closest_anchor(leaf, cp, vein_segment, theta):
         # find the shortest connection between all the vein projections
         for vein_part in vein_segment:
             print(f"vein_part: {vein_part}")
+            if len(vein_part) < 2 and isinstance(vein_part[0], list):
+                print(f"true is a list of len; {len(vein_part[0])}")
+                if len(vein_part[0]) == 2:
+                    vein_part = vein_part[0]
             vein = coord_to_vec(vein_part[0].pos, vein_part[1].pos)
             projection = vector_projection(vein_part[0].pos, vein_part[1].pos, cp.pos)
             proj_min, mag_min, vein_min, vein_part_min = find_closest_point(projection, vein, proj_min, mag_min, vein_min, vein_part, vein_part_min)

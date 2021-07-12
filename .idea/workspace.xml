@@ -6,9 +6,21 @@
   <component name="ChangeListManager">
     <list default="true" id="3ed38e10-9546-4849-9c9c-fd740011f06c" name="Default Changelist" comment="error in segment 6 on plot segments_3">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Prototype1/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/Main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Prototype1/default_setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/default_setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Prototype1/growth.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/growth.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Prototype1/leafstructure.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype1/leafstructure.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_0.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_0.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_10.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_10.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_11.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_11.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_12.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_12.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_13.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_13.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_14.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_14.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_15.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_15.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_16.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_16.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_17.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_17.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_18.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_18.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_2.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_2.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_3.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_3.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/img/plot_data/leaf__segments_4.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/plot_data/leaf__segments_4.png" afterDir="false" />
@@ -355,7 +367,14 @@
       <option name="project" value="LOCAL" />
       <updated>1625851671367</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="fixed vein segments up to step 10, for secundary veins">
+      <created>1626077713020</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1626077713020</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -400,6 +419,7 @@
     <MESSAGE value="bug created because the last part of primordiumvein gets added to the segment when it shouldnt -&gt; Runs till step 2 before cp addition" />
     <MESSAGE value="anchor addition first bug for vein assoc solved, secundary segment still incorrect" />
     <MESSAGE value="error in segment 6 on plot segments_3" />
-    <option name="LAST_COMMIT_MESSAGE" value="error in segment 6 on plot segments_3" />
+    <MESSAGE value="fixed vein segments up to step 10, for secundary veins" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed vein segments up to step 10, for secundary veins" />
   </component>
 </project>
