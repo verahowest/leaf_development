@@ -438,11 +438,15 @@ class Leaf:
                 i += 1
                 if left_cut == part[0]:
                     break
-            left_part = left_part[i-1::]
+            if part[1].pos[0] > 0.0001:
+                print(f"cutting right side at : {part[1]}")
+                left_part = left_part[:i-1]
+            else:
+                left_part = left_part[i - 1::]
             j = 0
             for part in right_part:
                 j += 1
-                if right_cut==part[1]:
+                if right_cut == part[1]:
                     break
             right_part = right_part[:j]
             print(f"i: {i} j: {j}")
@@ -532,7 +536,6 @@ class Leaf:
                 return vein_segment
             # case left vein and right vein don't connect -> recursion (maybe this isn't necessary yet)
 
-
         # def find_surrounding_veins(self):
         #     """Given a margin segment of points with their two surrounding cp's,
         #     this function finds the veins that surround that segment."""
@@ -573,6 +576,4 @@ class Leaf:
                     else:
                         pos.append(np.array(vein_pt.pos).astype(float))
 
-
             return pos
-
